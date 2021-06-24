@@ -1,0 +1,88 @@
+{
+	"name": "fusio",
+	"displayName": "fusio",
+	"description": "Simple action development for Fusio",
+	"version": "0.0.1",
+	"engines": {
+		"vscode": "^1.57.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onCommand:fusio.login",
+		"onCommand:fusio.logout",
+		"onCommand:fusio.open",
+		"onView:actionView"
+	],
+	"main": "./dist/extension.js",
+	"contributes": {
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "fusio-action-explorer",
+					"title": "Action Explorer",
+					"icon": "media/dep.svg"
+				}
+			]
+		},
+		"commands": [
+			{
+				"command": "fusio.login",
+				"title": "Login"
+			},
+			{
+				"command": "fusio.logout",
+				"title": "Logout"
+			},
+			{
+				"command": "fusio.open",
+				"title": "Open"
+			}
+		],
+		"views": {
+			"fusio-action-explorer": [
+				{
+					"id": "actionView",
+					"name": "Actions"
+				}
+			]
+		},
+		"viewsWelcome": [
+			{
+				"view": "actionView",
+				"contents": "In order to load actions you need to connect to a Fusio instance. Please use the login command to authenticate.\n[Login](command:fusio.login)"
+			}
+		]
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run package",
+		"compile": "webpack",
+		"watch": "webpack --watch",
+		"package": "webpack --mode production --devtool hidden-source-map",
+		"test-compile": "tsc -p ./",
+		"test-watch": "tsc -watch -p ./",
+		"pretest": "npm run test-compile && npm run lint",
+		"lint": "eslint src --ext ts",
+		"test": "node ./out/test/runTest.js"
+	},
+	"devDependencies": {
+		"@types/vscode": "^1.57.0",
+		"@types/glob": "^7.1.3",
+		"@types/mocha": "^8.2.2",
+		"@types/node": "14.x",
+		"eslint": "^7.27.0",
+		"@typescript-eslint/eslint-plugin": "^4.26.0",
+		"@typescript-eslint/parser": "^4.26.0",
+		"glob": "^7.1.7",
+		"mocha": "^8.4.0",
+		"typescript": "^4.3.2",
+		"vscode-test": "^1.5.2",
+		"ts-loader": "^9.2.2",
+		"webpack": "^5.38.1",
+		"webpack-cli": "^4.7.0"
+	},
+	"dependencies": {
+		"fusio-sdk": "^1.1.1"
+	}
+}
