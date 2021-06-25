@@ -2,6 +2,7 @@
 import * as vscode from 'vscode';
 import ClientBackend from "fusio-sdk/dist/src/generated/backend/Client";
 import Authenticator from 'fusio-sdk/dist/src/Authenticator';
+import { AxiosError } from "axios";
 
 export class Client {
     private client: ClientBackend|undefined;
@@ -12,6 +13,10 @@ export class Client {
     }
 
     public getBackend(): ClientBackend {
+        if (!this.hasValidAccessToken()) {
+            vscode.window.showInformationMessage('Not authenticated, please use the login command to authenticate');
+        }
+
         if (this.client) {
             return this.client;
         }
@@ -24,16 +29,16 @@ export class Client {
 
     public authenticate(fusioUrl: string, username: string, password: string) {
         let authenticator = new Authenticator(fusioUrl);
-        authenticator.requestAccessToken(username, password).then((resp) => {
-            let accessToken = resp.data.access_token;
-    
-            this.context.workspaceState.update('fusio_url', fusioUrl);
-            this.context.workspaceState.update('access_token', accessToken);
-        }).catch((error) => {
-            let response = JSON.stringify(error.response.data, null, 4);
-
-            vscode.window.showErrorMessage('Error: ' + response);
-        });
+        authenticator.requestAccessToken(username, password)
+            .then((resp) => {
+                let accessToken = resp.data.access_token;
+        
+                this.context.workspaceState.update('fusio_url', fusioUrl);
+                this.context.workspaceState.update('access_token', accessToken);
+            })
+            .catch((error) => {
+                this.showErrorResponse(error);
+            });
     }
 
     public logout() {
@@ -53,6 +58,14 @@ export class Client {
         }
 
         return true;
+    }
+
+    public showErrorResponse(error: AxiosError) {
+        if (!error.response) {
+            return;
+        }
+
+        vscode.window.showErrorMessage('An error occured:\n' + JSON.stringify(error.response.data, null, 4));
     }
 
     private tokenDecode(token: string): any {

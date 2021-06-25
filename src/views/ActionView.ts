@@ -5,6 +5,7 @@ import { Client } from '../Client';
 export class ActionView implements vscode.TreeDataProvider<Action> {
 	private context: vscode.ExtensionContext;
 	private client: Client;
+    private emitter: vscode.EventEmitter<undefined> = new vscode.EventEmitter<undefined>();
 
 	constructor(context: vscode.ExtensionContext, client: Client) {
         this.context = context;
@@ -13,11 +14,17 @@ export class ActionView implements vscode.TreeDataProvider<Action> {
 		const view = vscode.window.createTreeView('actionView', {
             treeDataProvider: this,
             showCollapseAll: true,
-            canSelectMany: true
+            canSelectMany: true,
         });
 
 		this.context.subscriptions.push(view);
 	}
+
+    readonly onDidChangeTreeData: vscode.Event<undefined> = this.emitter.event;
+
+    public refresh(): void {
+        this.emitter.fire(undefined);
+    }
 
     public getTreeItem(action: Action): vscode.TreeItem {
         return {
@@ -27,7 +34,7 @@ export class ActionView implements vscode.TreeDataProvider<Action> {
             description: false,
             command: {
                 title: 'Open',
-                command: 'fusio.open',
+                command: 'fusio.action.open',
                 arguments: [action]
             }
         };
