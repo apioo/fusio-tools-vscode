@@ -2,10 +2,10 @@
 import { Action } from 'fusio-sdk/dist/src/generated/backend/Action';
 import path = require('path');
 import * as vscode from 'vscode';
-import { ActionRegistry } from '../ActionRegistry';
-import { Client } from '../Client';
+import { ActionRegistry } from '../../ActionRegistry';
+import { Client } from '../../Client';
 import { AxiosError } from "axios";
-import { ActionView } from '../views/ActionView';
+import { ActionView } from '../../views/ActionView';
 
 function saveCommand(context: vscode.ExtensionContext, client: Client, registry: ActionRegistry, actionView: ActionView, document: vscode.TextDocument) {
     const action = registry.get(document.uri);

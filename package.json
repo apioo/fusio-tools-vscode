@@ -15,7 +15,11 @@
 		"onCommand:fusio.action.open",
 		"onCommand:fusio.action.save",
 		"onCommand:fusio.action.execute",
-		"onView:actionView"
+		"onCommand:fusio.schema.open",
+		"onCommand:fusio.connection.open",
+		"onView:actionView",
+		"onView:schemaView",
+		"onView:connectionView"
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
@@ -48,6 +52,14 @@
 			{
 				"command": "fusio.action.execute",
 				"title": "Action Execute"
+			},
+			{
+				"command": "fusio.schema.open",
+				"title": "Schema Open"
+			},
+			{
+				"command": "fusio.connection.open",
+				"title": "Connection Open"
 			}
 		],
 		"views": {
@@ -55,12 +67,28 @@
 				{
 					"id": "actionView",
 					"name": "Actions"
+				},
+				{
+					"id": "schemaView",
+					"name": "Schemas"
+				},
+				{
+					"id": "connectionView",
+					"name": "Connections"
 				}
 			]
 		},
 		"viewsWelcome": [
 			{
 				"view": "actionView",
+				"contents": "In order to load actions you need to connect to a Fusio instance. Please use the login command to authenticate.\n[Login](command:fusio.login)"
+			},
+			{
+				"view": "schemaView",
+				"contents": "In order to load actions you need to connect to a Fusio instance. Please use the login command to authenticate.\n[Login](command:fusio.login)"
+			},
+			{
+				"view": "connectionView",
 				"contents": "In order to load actions you need to connect to a Fusio instance. Please use the login command to authenticate.\n[Login](command:fusio.login)"
 			}
 		]

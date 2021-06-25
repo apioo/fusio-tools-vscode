@@ -1,6 +1,6 @@
 
 import * as vscode from 'vscode';
-import { Client } from '../Client';
+import { Client } from '../../Client';
 
 async function loginCommand(context: vscode.ExtensionContext, client: Client) {
     const accessToken = context.workspaceState.get<string>('access_token');

@@ -1,7 +1,7 @@
 
 import * as vscode from 'vscode';
-import { ActionRegistry } from '../ActionRegistry';
-import { Client } from '../Client';
+import { ActionRegistry } from '../../ActionRegistry';
+import { Client } from '../../Client';
 
 async function executeCommand(context: vscode.ExtensionContext, client: Client, registry: ActionRegistry, channel: vscode.OutputChannel, document: vscode.TextDocument) {
     let action = registry.get(document.uri);

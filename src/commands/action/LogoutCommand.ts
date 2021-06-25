@@ -1,6 +1,6 @@
 
 import * as vscode from 'vscode';
-import { Client } from '../Client';
+import { Client } from '../../Client';
 
 async function logoutCommand(context: vscode.ExtensionContext, client: Client) {
     client.logout();

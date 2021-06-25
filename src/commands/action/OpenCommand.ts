@@ -2,8 +2,8 @@
 import { Action } from 'fusio-sdk/dist/src/generated/backend/Action';
 import { TextEncoder } from 'util';
 import * as vscode from 'vscode';
-import { ActionRegistry } from '../ActionRegistry';
-import { Client } from '../Client';
+import { ActionRegistry } from '../../ActionRegistry';
+import { Client } from '../../Client';
 
 async function openCommand(context: vscode.ExtensionContext, client: Client, registry: ActionRegistry, action: Action) {
     if (!action || !action.id) {

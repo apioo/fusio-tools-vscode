@@ -1,22 +1,32 @@
 
 import { Action } from 'fusio-sdk/dist/src/generated/backend/Action';
+import { Connection } from 'fusio-sdk/dist/src/generated/backend/Connection';
+import { Schema } from 'fusio-sdk/dist/src/generated/backend/Schema';
 import * as vscode from 'vscode';
 import { ActionRegistry } from './ActionRegistry';
 import { Client } from './Client';
-import executeCommand from './commands/ExecuteCommand';
-import loginCommand from './commands/LoginCommand';
-import logoutCommand from './commands/LogoutCommand';
-import openCommand from './commands/OpenCommand';
-import saveCommand from './commands/SaveCommand';
+import executeCommand from './commands/action/ExecuteCommand';
+import loginCommand from './commands/action/LoginCommand';
+import logoutCommand from './commands/action/LogoutCommand';
+import actionOpenCommand from './commands/action/OpenCommand';
+import saveCommand from './commands/action/SaveCommand';
+import schemaOpenCommand from './commands/schema/OpenCommand';
+import connectionOpenCommand from './commands/connection/OpenCommand';
 import { ActionView } from './views/ActionView';
+import { ConnectionView } from './views/ConnectionView';
+import { SchemaView } from './views/SchemaView';
 
 export function activate(context: vscode.ExtensionContext) {
 	let client = new Client(context);
 	let registry = new ActionRegistry();
 	let actionView = new ActionView(context, client);
+	let schemaView = new SchemaView(context, client);
+	let connectionView = new ConnectionView(context, client);
 	let channel = vscode.window.createOutputChannel('Fusio Response');
 
 	vscode.window.registerTreeDataProvider('actionView', actionView);
+	vscode.window.registerTreeDataProvider('schemaView', schemaView);
+	vscode.window.registerTreeDataProvider('connectionView', connectionView);
 
 	vscode.workspace.onDidSaveTextDocument((document: vscode.TextDocument) => {
 		saveCommand(context, client, registry, actionView, document);
@@ -31,7 +41,7 @@ export function activate(context: vscode.ExtensionContext) {
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand('fusio.action.open', (action: Action) => {
-		openCommand(context, client, registry, action);
+		actionOpenCommand(context, client, registry, action);
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand('fusio.action.save', () => {
@@ -49,6 +59,15 @@ export function activate(context: vscode.ExtensionContext) {
 
 		executeCommand(context, client, registry, channel, vscode.window.activeTextEditor.document);
 	}));
+	
+	context.subscriptions.push(vscode.commands.registerCommand('fusio.schema.open', (schema: Schema) => {
+		schemaOpenCommand(context, client, schema);
+	}));
+
+	context.subscriptions.push(vscode.commands.registerCommand('fusio.connection.open', (connection: Connection) => {
+		connectionOpenCommand(context, client, connection);
+	}));
+
 }
 
 export function deactivate() {}
