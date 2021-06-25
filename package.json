@@ -12,7 +12,9 @@
 	"activationEvents": [
 		"onCommand:fusio.login",
 		"onCommand:fusio.logout",
-		"onCommand:fusio.open",
+		"onCommand:fusio.action.open",
+		"onCommand:fusio.action.save",
+		"onCommand:fusio.action.execute",
 		"onView:actionView"
 	],
 	"main": "./dist/extension.js",
@@ -20,8 +22,8 @@
 		"viewsContainers": {
 			"activitybar": [
 				{
-					"id": "fusio-action-explorer",
-					"title": "Action Explorer",
+					"id": "fusio",
+					"title": "Fusio",
 					"icon": "media/dep.svg"
 				}
 			]
@@ -36,12 +38,20 @@
 				"title": "Logout"
 			},
 			{
-				"command": "fusio.open",
-				"title": "Open"
+				"command": "fusio.action.open",
+				"title": "Action Open"
+			},
+			{
+				"command": "fusio.action.save",
+				"title": "Action Save"
+			},
+			{
+				"command": "fusio.action.execute",
+				"title": "Action Execute"
 			}
 		],
 		"views": {
-			"fusio-action-explorer": [
+			"fusio": [
 				{
 					"id": "actionView",
 					"name": "Actions"
