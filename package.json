@@ -2,7 +2,7 @@
 	"name": "fusio",
 	"displayName": "fusio",
 	"description": "Simple action development for Fusio",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"engines": {
 		"vscode": "^1.57.0"
 	},
