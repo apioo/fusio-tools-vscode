@@ -8,7 +8,7 @@ export class ActionView implements vscode.TreeDataProvider<Action> {
 	private context: vscode.ExtensionContext;
 	private client: Client;
     private repository: Repository<Action>;
-    private emitter: vscode.EventEmitter<undefined> = new vscode.EventEmitter<undefined>();
+    private emitter: vscode.EventEmitter<void> = new vscode.EventEmitter<void>();
 
 	constructor(context: vscode.ExtensionContext, client: Client, repository: Repository<Action>) {
         this.context = context;
@@ -24,10 +24,10 @@ export class ActionView implements vscode.TreeDataProvider<Action> {
 		this.context.subscriptions.push(view);
 	}
 
-    readonly onDidChangeTreeData: vscode.Event<undefined> = this.emitter.event;
+    readonly onDidChangeTreeData: vscode.Event<void> = this.emitter.event;
 
     public refresh(): void {
-        this.emitter.fire(undefined);
+        this.emitter.fire();
     }
 
     public getTreeItem(action: Action): vscode.TreeItem {
@@ -46,14 +46,23 @@ export class ActionView implements vscode.TreeDataProvider<Action> {
 
     public getChildren(): vscode.ProviderResult<Action[]> {
         return new Promise(resolve => {
-            this.client.getBackend().getBackendAction().backendActionActionGetAll({count: 1024}).then(async (resp) => {
-                if (!resp.data.entry) {
-                    return;
-                }
+            if (!this.client.hasValidAccessToken()) {
+                resolve([]);
+                return;
+            }
 
-                this.repository.set(resp.data.entry);
-                resolve(resp.data.entry);
-            });
+            this.client.getBackend().getBackendAction().backendActionActionGetAll({count: 1024})
+                .then((resp) => {
+                    if (!resp.data.entry) {
+                        return;
+                    }
+
+                    this.repository.set(resp.data.entry);
+                    resolve(resp.data.entry);
+                })
+                .catch((error) => {
+                    resolve([]);
+                });
         });
     }
 }

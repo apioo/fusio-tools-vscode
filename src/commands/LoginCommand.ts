@@ -1,8 +1,8 @@
 
 import * as vscode from 'vscode';
-import { Client } from '../../Client';
+import { Client } from '../Client';
 
-async function loginCommand(context: vscode.ExtensionContext, client: Client) {
+async function loginCommand(context: vscode.ExtensionContext, client: Client, onLogin: Function) {
     const accessToken = context.workspaceState.get<string>('access_token');
 
     if (client.hasValidAccessToken()) {
@@ -34,7 +34,7 @@ async function loginCommand(context: vscode.ExtensionContext, client: Client) {
         return;
     }
 
-    client.authenticate(fusioUrl, username, password);
+    client.login(fusioUrl, username, password, onLogin);
 }
 
 export default loginCommand;

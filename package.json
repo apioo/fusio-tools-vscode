@@ -6,8 +6,7 @@
 	"displayName": "fusio",
 	"description": "Simple action development for Fusio",
 	"categories": [
-		"Other",
-		"Extension Packs"
+		"Other"
 	],
 	"keywords": [
 		"API",

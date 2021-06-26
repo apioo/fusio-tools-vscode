@@ -8,7 +8,7 @@ export class SchemaView implements vscode.TreeDataProvider<Schema> {
 	private context: vscode.ExtensionContext;
 	private client: Client;
     private repository: Repository<Schema>;
-    private emitter: vscode.EventEmitter<undefined> = new vscode.EventEmitter<undefined>();
+    private emitter: vscode.EventEmitter<void> = new vscode.EventEmitter<void>();
 
 	constructor(context: vscode.ExtensionContext, client: Client, repository: Repository<Schema>) {
         this.context = context;
@@ -24,10 +24,10 @@ export class SchemaView implements vscode.TreeDataProvider<Schema> {
 		this.context.subscriptions.push(view);
 	}
 
-    readonly onDidChangeTreeData: vscode.Event<undefined> = this.emitter.event;
+    readonly onDidChangeTreeData: vscode.Event<void> = this.emitter.event;
 
     public refresh(): void {
-        this.emitter.fire(undefined);
+        this.emitter.fire();
     }
 
     public getTreeItem(schema: Schema): vscode.TreeItem {
@@ -46,6 +46,11 @@ export class SchemaView implements vscode.TreeDataProvider<Schema> {
 
     public getChildren(): vscode.ProviderResult<Schema[]> {
         return new Promise(resolve => {
+            if (!this.client.hasValidAccessToken()) {
+                resolve([]);
+                return;
+            }
+
             this.client.getBackend().getBackendSchema().backendActionSchemaGetAll({count: 1024}).then(async (resp) => {
                 if (!resp.data.entry) {
                     return;
@@ -53,6 +58,9 @@ export class SchemaView implements vscode.TreeDataProvider<Schema> {
 
                 this.repository.set(resp.data.entry);
                 resolve(resp.data.entry);
+            })
+            .catch((error) => {
+                resolve([]);
             });
         });
     }

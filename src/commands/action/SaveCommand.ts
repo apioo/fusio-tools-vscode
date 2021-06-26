@@ -8,6 +8,10 @@ import { AxiosError } from "axios";
 import { ActionView } from '../../views/ActionView';
 
 function saveCommand(context: vscode.ExtensionContext, client: Client, registry: ActionRegistry, actionView: ActionView, document: vscode.TextDocument) {
+    if (!client.hasValidAccessToken()) {
+        return;
+    }
+
     const action = registry.get(document.uri);
     if (!action) {
         // found no action for this file look whether we can find it

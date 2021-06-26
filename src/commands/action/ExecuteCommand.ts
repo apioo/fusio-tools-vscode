@@ -4,6 +4,10 @@ import { ActionRegistry } from '../../ActionRegistry';
 import { Client } from '../../Client';
 
 async function executeCommand(context: vscode.ExtensionContext, client: Client, registry: ActionRegistry, channel: vscode.OutputChannel, document: vscode.TextDocument) {
+    if (!client.hasValidAccessToken()) {
+        return;
+    }
+
     let action = registry.get(document.uri);
     if (!action) {
         return;

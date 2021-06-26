@@ -6,8 +6,8 @@ import * as vscode from 'vscode';
 import { ActionRegistry } from './ActionRegistry';
 import { Client } from './Client';
 import executeCommand from './commands/action/ExecuteCommand';
-import loginCommand from './commands/action/LoginCommand';
-import logoutCommand from './commands/action/LogoutCommand';
+import loginCommand from './commands/LoginCommand';
+import logoutCommand from './commands/LogoutCommand';
 import actionOpenCommand from './commands/action/OpenCommand';
 import saveCommand from './commands/action/SaveCommand';
 import schemaOpenCommand from './commands/schema/OpenCommand';
@@ -40,11 +40,19 @@ export function activate(context: vscode.ExtensionContext) {
 	vscode.languages.registerCompletionItemProvider('php', new CompletionProvider(connectionRepository));
 
 	context.subscriptions.push(vscode.commands.registerCommand('fusio.login', () => {
-		loginCommand(context, client);
+		loginCommand(context, client, () => {
+			actionView.refresh();
+			schemaView.refresh();
+			connectionView.refresh();
+		});
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand('fusio.logout', () => {
-		logoutCommand(context, client);
+		logoutCommand(context, client, () => {
+			actionView.refresh();
+			schemaView.refresh();
+			connectionView.refresh();
+		});
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand('fusio.action.open', (action: Action) => {

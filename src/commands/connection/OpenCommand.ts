@@ -4,6 +4,10 @@ import * as vscode from 'vscode';
 import { Client } from '../../Client';
 
 async function openCommand(context: vscode.ExtensionContext, client: Client, connection: Connection) {
+    if (!client.hasValidAccessToken()) {
+        return;
+    }
+
     if (!connection || !connection.id) {
         return;
     }

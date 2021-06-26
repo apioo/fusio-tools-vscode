@@ -6,6 +6,10 @@ import { ActionRegistry } from '../../ActionRegistry';
 import { Client } from '../../Client';
 
 async function openCommand(context: vscode.ExtensionContext, client: Client, registry: ActionRegistry, action: Action) {
+    if (!client.hasValidAccessToken()) {
+        return;
+    }
+
     if (!action || !action.id) {
         return;
     }

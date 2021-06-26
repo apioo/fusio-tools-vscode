@@ -27,7 +27,7 @@ export class Client {
         return this.client = new ClientBackend(fusioUrl, accessToken);
     }
 
-    public authenticate(fusioUrl: string, username: string, password: string) {
+    public login(fusioUrl: string, username: string, password: string, onLogin: Function) {
         let authenticator = new Authenticator(fusioUrl);
         authenticator.requestAccessToken(username, password)
             .then((resp) => {
@@ -35,29 +35,45 @@ export class Client {
 
                 this.context.workspaceState.update('fusio_url', fusioUrl);
                 this.context.workspaceState.update('access_token', accessToken);
+
+                onLogin(accessToken);
             })
             .catch((error) => {
                 this.showErrorResponse(error);
             });
     }
 
-    public logout() {
+    public logout(onLogout: Function) {
+        const accessToken = this.getAccessToken();
+        if (accessToken !== null) {
+            // in case we have currently an valid token we can also revoke it
+            const fusioUrl = '' + this.context.workspaceState.get<string>('fusio_url');
+            let authenticator = new Authenticator(fusioUrl);
+            authenticator.revokeAccessToken(accessToken);
+        }
+
         this.context.workspaceState.update('fusio_url', null);
         this.context.workspaceState.update('access_token', null);
+
+        onLogout();
     }
 
     public hasValidAccessToken(): boolean {
+        return this.getAccessToken() !== null;
+    }
+
+    public getAccessToken(): string|null {
         const accessToken = this.context.workspaceState.get<string>('access_token');
         if (!accessToken) {
-            return false;
+            return null;
         }
 
         const token = this.tokenDecode(accessToken);
         if (!token) {
-            return false;
+            return null;
         }
 
-        return true;
+        return accessToken;
     }
 
     public showErrorResponse(error: AxiosError) {
