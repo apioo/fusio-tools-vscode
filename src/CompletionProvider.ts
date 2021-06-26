@@ -15,15 +15,12 @@ export class CompletionProvider implements CompletionItemProvider {
     public constructor(connectionRepository: Repository<Connection>) {
         this.connectionRepository = connectionRepository;
         this.data = this.loadApiData();
-        console.log('loaded', this.data);
     }
 
     public provideCompletionItems(document: TextDocument, position: Position, token: CancellationToken, context: CompletionContext): ProviderResult<CompletionItem[]> {
         return new Promise(resolve => {
             let suggestions: CompletionItem[] = [];
             const textUntilPosition = document.lineAt(position).text.substr(0, position.character);
-
-            console.log(textUntilPosition);
 
             // specific connector suggestions
             if (textUntilPosition.endsWith("$connector->getConnection('") || textUntilPosition.endsWith("$connector->getConnection(\"")) {
@@ -43,8 +40,6 @@ export class CompletionProvider implements CompletionItemProvider {
             if (suggestions.length === 0) {
                 suggestions = this.createGlobalProposals();
             }
-
-            console.log(suggestions);
 
             resolve(suggestions);
         });
@@ -121,7 +116,6 @@ export class CompletionProvider implements CompletionItemProvider {
 
     private loadApiData(): any {
         const file = path.join(__filename, '..', '..', 'media', 'api.yaml');
-        console.log('read file', file);
         return yaml.load(fs.readFileSync(file, 'utf8'));
     }
 
