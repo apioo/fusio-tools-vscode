@@ -24,13 +24,13 @@ The following commands are available:
   Revokes an active access token and removes any locally stored tokens.
 * `fusio.action.open`
 
-  This action is executed if you click on an action at the sidebar. Downloads the action code and write the code to a local file in your workspace. The file name is equals to the action name including a fitting file extension. Note it will overwrite any existing file with the same name, since we assume that you want to obtain the current version from the server.
+  This action is executed if you click on an action at the sidebar. Downloads the action code and writes the code to a local file in your workspace. The file name is equal to the action name. Note it will overwrite any existing file with the same name, since we assume that you want to obtain the current version from the server.
 * `fusio.action.save`
 
   Triggered if you save a document, this action writes all changes back to the remote instance.
 * `fusio.action.execute`
 
-  Executes the action on the remote server and shows the response at the output panel. This useful for testing since you can execute the action even if the action is not attached to a route.
+  Executes the action on the remote server and shows the response at the output panel. This useful for testing since you can execute an action even if the action is not attached to a route.
 * `fusio.schema.open`
 
   Shows a HTML rendered version of the defined schema. This is especially useful if a developer needs to create an action which should follow the defined schema.
@@ -40,4 +40,4 @@ The following commands are available:
 
 ## Completion
 
-Besides the commands this extension registers an auto completeion provider which tries to provide some useful suggestions for action development.
+Besides the commands this extension registers an auto completion provider which tries to provide some useful suggestions for action development.
