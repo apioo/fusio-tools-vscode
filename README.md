@@ -4,8 +4,8 @@
 ## Overview
 
 This extension integrates Fusio support into VSCode. That means you can connect to a Fusio instance an load, edit and execute actions through VSCode.
-It provides a more advanced development environment for developers who want to create actions for Fusio. More information about Fusio at:
-https://www.fusio-project.org/
+It provides a more advanced development environment for action developers. The extension is available at the
+[marketplace](https://marketplace.visualstudio.com/items?itemName=Fusio.fusio). More information about Fusio at: https://www.fusio-project.org/
 
 ![Screenshot](./media/screenshot.png)
 
