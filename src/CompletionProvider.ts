@@ -4,8 +4,8 @@ import { Connection } from "fusio-sdk/dist/src/generated/backend/Connection";
 import { CancellationToken, CompletionContext, CompletionItem, CompletionItemProvider, CompletionList, Position, ProviderResult, TextDocument } from "vscode";
 import { Repository } from "./Repository";
 import path = require('path');
-import fs = require('fs');
 import yaml = require('js-yaml');
+import { TextDecoder } from 'util';
 
 export class CompletionProvider implements CompletionItemProvider {
 
@@ -14,7 +14,9 @@ export class CompletionProvider implements CompletionItemProvider {
 
     public constructor(connectionRepository: Repository<Connection>) {
         this.connectionRepository = connectionRepository;
-        this.data = this.loadApiData();
+        this.loadApiData().then((data) => {
+            this.data = data
+        });
     }
 
     public provideCompletionItems(document: TextDocument, position: Position, token: CancellationToken, context: CompletionContext): ProviderResult<CompletionItem[]> {
@@ -114,9 +116,13 @@ export class CompletionProvider implements CompletionItemProvider {
         return result;
     }
 
-    private loadApiData(): any {
-        const file = path.join(__filename, '..', '..', 'media', 'api.yaml');
-        return yaml.load(fs.readFileSync(file, 'utf8'));
+    private loadApiData(): Promise<any> {
+        return new Promise((resolve) => {
+            const file = path.join(__filename, '..', '..', 'media', 'api.yaml');
+            vscode.workspace.fs.readFile(vscode.Uri.file(file)).then((data) => {
+                resolve(yaml.load(new TextDecoder().decode(data)));
+            });
+        });
     }
 
 }

@@ -2,8 +2,8 @@
 import { Schema } from 'fusio-sdk/dist/src/generated/backend/Schema';
 import * as vscode from 'vscode';
 import { Client } from '../../Client';
-import fs = require('fs');
 import path = require('path');
+import { TextDecoder } from 'util';
 
 async function openCommand(context: vscode.ExtensionContext, client: Client, schema: Schema) {
     if (!client.hasValidAccessToken()) {
@@ -23,10 +23,11 @@ async function openCommand(context: vscode.ExtensionContext, client: Client, sch
             );
 
             const file = path.join(__filename, '..', '..', 'media', 'schema.html');
-            let html = fs.readFileSync(file, 'utf8');
-            html = html.replace('{{ html }}', '' + resp.data.preview);
-
-            panel.webview.html = html;
+            vscode.workspace.fs.readFile(vscode.Uri.file(file)).then((data) => {
+                var html = new TextDecoder().decode(data);
+                html = html.replace('{{ html }}', '' + resp.data.preview);
+                panel.webview.html = html;    
+            });
         })
         .catch((error) => {
             client.showErrorResponse(error);
