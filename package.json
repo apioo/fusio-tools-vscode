@@ -1,14 +1,25 @@
 {
 	"name": "fusio",
+	"version": "0.1.0",
+	"publisher": "Fusio",
+	"license": "MIT",
 	"displayName": "fusio",
 	"description": "Simple action development for Fusio",
-	"version": "0.1.0",
+	"categories": [
+		"Other",
+		"Extension Packs"
+	],
+	"keywords": [
+		"API",
+		"Development",
+		"REST",
+		"Client"
+	],
+	"preview": true,
+	"repository": "https://github.com/apioo/fusio-tools-vscode",
 	"engines": {
 		"vscode": "^1.57.0"
 	},
-	"categories": [
-		"Other"
-	],
 	"activationEvents": [
 		"onCommand:fusio.login",
 		"onCommand:fusio.logout",
