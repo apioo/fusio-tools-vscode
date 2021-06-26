@@ -28,7 +28,7 @@
 				{
 					"id": "fusio",
 					"title": "Fusio",
-					"icon": "media/dep.svg"
+					"icon": "media/fusio_32px.png"
 				}
 			]
 		},
@@ -81,14 +81,6 @@
 		"viewsWelcome": [
 			{
 				"view": "actionView",
-				"contents": "In order to load actions you need to connect to a Fusio instance. Please use the login command to authenticate.\n[Login](command:fusio.login)"
-			},
-			{
-				"view": "schemaView",
-				"contents": "In order to load actions you need to connect to a Fusio instance. Please use the login command to authenticate.\n[Login](command:fusio.login)"
-			},
-			{
-				"view": "connectionView",
 				"contents": "In order to load actions you need to connect to a Fusio instance. Please use the login command to authenticate.\n[Login](command:fusio.login)"
 			}
 		]
