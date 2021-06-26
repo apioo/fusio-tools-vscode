@@ -32,7 +32,7 @@ export class Client {
         authenticator.requestAccessToken(username, password)
             .then((resp) => {
                 let accessToken = resp.data.access_token;
-        
+
                 this.context.workspaceState.update('fusio_url', fusioUrl);
                 this.context.workspaceState.update('access_token', accessToken);
             })

@@ -1,15 +1,19 @@
 import * as vscode from 'vscode';
 import { Connection } from 'fusio-sdk/dist/src/generated/backend/Connection';
 import { Client } from '../Client';
+import { Repository } from '../Repository';
+import path = require('path');
 
 export class ConnectionView implements vscode.TreeDataProvider<Connection> {
 	private context: vscode.ExtensionContext;
 	private client: Client;
+    private repository: Repository<Connection>;
     private emitter: vscode.EventEmitter<undefined> = new vscode.EventEmitter<undefined>();
 
-	constructor(context: vscode.ExtensionContext, client: Client) {
+	constructor(context: vscode.ExtensionContext, client: Client, repository: Repository<Connection>) {
         this.context = context;
         this.client = client;
+        this.repository = repository;
 
 		const view = vscode.window.createTreeView('connectionView', {
             treeDataProvider: this,
@@ -30,7 +34,7 @@ export class ConnectionView implements vscode.TreeDataProvider<Connection> {
         return {
             label: connection.name,
             id: '' + connection.id,
-            iconPath: '',
+            iconPath: path.join(__filename, '..', '..', 'media', 'connection.svg'),
             description: false,
             command: {
                 title: 'Open',
@@ -47,6 +51,7 @@ export class ConnectionView implements vscode.TreeDataProvider<Connection> {
                     return;
                 }
 
+                this.repository.set(resp.data.entry);
                 resolve(resp.data.entry);
             });
         });

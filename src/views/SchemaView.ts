@@ -1,15 +1,19 @@
 import * as vscode from 'vscode';
 import { Schema } from 'fusio-sdk/dist/src/generated/backend/Schema';
 import { Client } from '../Client';
+import { Repository } from '../Repository';
+import path = require('path');
 
 export class SchemaView implements vscode.TreeDataProvider<Schema> {
 	private context: vscode.ExtensionContext;
 	private client: Client;
+    private repository: Repository<Schema>;
     private emitter: vscode.EventEmitter<undefined> = new vscode.EventEmitter<undefined>();
 
-	constructor(context: vscode.ExtensionContext, client: Client) {
+	constructor(context: vscode.ExtensionContext, client: Client, repository: Repository<Schema>) {
         this.context = context;
         this.client = client;
+        this.repository = repository;
 
 		const view = vscode.window.createTreeView('schemaView', {
             treeDataProvider: this,
@@ -30,7 +34,7 @@ export class SchemaView implements vscode.TreeDataProvider<Schema> {
         return {
             label: schema.name,
             id: '' + schema.id,
-            iconPath: '',
+            iconPath: path.join(__filename, '..', '..', 'media', 'schema.svg'),
             description: false,
             command: {
                 title: 'Open',
@@ -47,6 +51,7 @@ export class SchemaView implements vscode.TreeDataProvider<Schema> {
                     return;
                 }
 
+                this.repository.set(resp.data.entry);
                 resolve(resp.data.entry);
             });
         });

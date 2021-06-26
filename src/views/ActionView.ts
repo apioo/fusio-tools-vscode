@@ -1,15 +1,19 @@
 import * as vscode from 'vscode';
 import { Action } from 'fusio-sdk/dist/src/generated/backend/Action';
 import { Client } from '../Client';
+import { Repository } from '../Repository';
+import path = require('path');
 
 export class ActionView implements vscode.TreeDataProvider<Action> {
 	private context: vscode.ExtensionContext;
 	private client: Client;
+    private repository: Repository<Action>;
     private emitter: vscode.EventEmitter<undefined> = new vscode.EventEmitter<undefined>();
 
-	constructor(context: vscode.ExtensionContext, client: Client) {
+	constructor(context: vscode.ExtensionContext, client: Client, repository: Repository<Action>) {
         this.context = context;
         this.client = client;
+        this.repository = repository;
 
 		const view = vscode.window.createTreeView('actionView', {
             treeDataProvider: this,
@@ -30,7 +34,7 @@ export class ActionView implements vscode.TreeDataProvider<Action> {
         return {
             label: action.name,
             id: '' + action.id,
-            iconPath: '',
+            iconPath: path.join(__filename, '..', '..', 'media', 'action.svg'),
             description: false,
             command: {
                 title: 'Open',
@@ -47,6 +51,7 @@ export class ActionView implements vscode.TreeDataProvider<Action> {
                     return;
                 }
 
+                this.repository.set(resp.data.entry);
                 resolve(resp.data.entry);
             });
         });

@@ -15,13 +15,18 @@ import connectionOpenCommand from './commands/connection/OpenCommand';
 import { ActionView } from './views/ActionView';
 import { ConnectionView } from './views/ConnectionView';
 import { SchemaView } from './views/SchemaView';
+import { Repository } from './Repository';
+import { CompletionProvider } from './CompletionProvider';
 
 export function activate(context: vscode.ExtensionContext) {
 	let client = new Client(context);
 	let registry = new ActionRegistry();
-	let actionView = new ActionView(context, client);
-	let schemaView = new SchemaView(context, client);
-	let connectionView = new ConnectionView(context, client);
+	let actionRepository = new Repository<Action>();
+	let schemaRepository = new Repository<Schema>();
+	let connectionRepository = new Repository<Connection>();
+	let actionView = new ActionView(context, client, actionRepository);
+	let schemaView = new SchemaView(context, client, schemaRepository);
+	let connectionView = new ConnectionView(context, client, connectionRepository);
 	let channel = vscode.window.createOutputChannel('Fusio Response');
 
 	vscode.window.registerTreeDataProvider('actionView', actionView);
@@ -31,6 +36,8 @@ export function activate(context: vscode.ExtensionContext) {
 	vscode.workspace.onDidSaveTextDocument((document: vscode.TextDocument) => {
 		saveCommand(context, client, registry, actionView, document);
 	});
+
+	vscode.languages.registerCompletionItemProvider('php', new CompletionProvider(connectionRepository));
 
 	context.subscriptions.push(vscode.commands.registerCommand('fusio.login', () => {
 		loginCommand(context, client);
