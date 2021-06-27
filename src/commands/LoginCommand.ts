@@ -10,7 +10,7 @@ async function loginCommand(context: vscode.ExtensionContext, client: Client, on
         return;
     }
 
-    const fusioUrl = await vscode.window.showInputBox({
+    let fusioUrl = await vscode.window.showInputBox({
         title: 'Url',
         value: '',
         placeHolder: 'Endpoint url of your Fusion instance i.e. https://demo.fusio-project.org/'
@@ -32,6 +32,12 @@ async function loginCommand(context: vscode.ExtensionContext, client: Client, on
     if (!fusioUrl || !username || !password) {
         vscode.window.showInformationMessage('Provided an invalid url, username or password');
         return;
+    }
+
+    // normalize url
+    fusioUrl = fusioUrl.trim();
+    if (fusioUrl.endsWith('/')) {
+        fusioUrl = fusioUrl.slice(0, -1);
     }
 
     client.login(fusioUrl, username, password, onLogin);

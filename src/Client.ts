@@ -31,12 +31,13 @@ export class Client {
         let authenticator = new Authenticator(fusioUrl);
         authenticator.requestAccessToken(username, password)
             .then((resp) => {
-                let accessToken = resp.data.access_token;
+                const accessToken = resp.data.access_token;
 
-                this.context.workspaceState.update('fusio_url', fusioUrl);
-                this.context.workspaceState.update('access_token', accessToken);
-
-                onLogin(accessToken);
+                this.context.workspaceState.update('fusio_url', fusioUrl).then(() => {
+                    this.context.workspaceState.update('access_token', accessToken).then(() => {
+                        onLogin(accessToken);
+                    });    
+                });
             })
             .catch((error) => {
                 this.showErrorResponse(error);
@@ -52,10 +53,11 @@ export class Client {
             authenticator.revokeAccessToken(accessToken);
         }
 
-        this.context.workspaceState.update('fusio_url', null);
-        this.context.workspaceState.update('access_token', null);
-
-        onLogout();
+        this.context.workspaceState.update('fusio_url', null).then(() => {
+            this.context.workspaceState.update('access_token', null).then(() => {
+                onLogout();
+            });
+        });
     }
 
     public hasValidAccessToken(): boolean {
@@ -81,14 +83,16 @@ export class Client {
             return;
         }
 
-        vscode.window.showErrorMessage('An error occured:\n' + JSON.stringify(error.response.data, null, 4));
+        console.error(error.config.url, error.response.data);
+
+        vscode.window.showErrorMessage('An error occured for request!');
     }
 
     private tokenDecode(token: string): any {
         if (!token) {
             return false;
         }
-    
+
         let parts = token.split(".");
         if (parts.length >= 2) {
             let body = JSON.parse(Buffer.from(parts[1], 'base64').toString());
