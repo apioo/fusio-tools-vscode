@@ -25,8 +25,20 @@ async function openCommand(context: vscode.ExtensionContext, client: Client, reg
             } else if (action.class === 'Fusio\\Adapter\\Sql\\Action\\SqlSelect') {
                 code = action.config?.sql;
                 language = 'sql';
+            } else if (action.class === 'Fusio\\Impl\\Worker\\Action\\WorkerJava') {
+                code = action.config?.code;
+                language = 'java';
+            } else if (action.class === 'Fusio\\Impl\\Worker\\Action\\WorkerJavascript') {
+                code = action.config?.code;
+                language = 'js';
+            } else if (action.class === 'Fusio\\Impl\\Worker\\Action\\WorkerPHP') {
+                code = action.config?.code;
+                language = 'php';
+            } else if (action.class === 'Fusio\\Impl\\Worker\\Action\\WorkerPython') {
+                code = action.config?.code;
+                language = 'py';
             } else {
-                code = "<?php\n\n// Note this editor can only edit PHP-Sandbox actions\n// It is still possible to execute this action\n\n/*\n" + JSON.stringify(action, null, 4) + "\n*/";
+                code = "<?php\n\n// Note this editor can only edit specific actions\n// It is still possible to execute this action\n\n/*\n" + JSON.stringify(action, null, 4) + "\n*/";
                 language = 'php';
             }
 

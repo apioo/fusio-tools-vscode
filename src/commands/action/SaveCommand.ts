@@ -51,6 +51,14 @@ function update(client: Client, document: vscode.TextDocument, action: Action) {
         action.config.code = document.getText();
     } else if (action.class === 'Fusio\\Adapter\\Sql\\Action\\SqlSelect') {
         action.config.sql = document.getText();
+    } else if (action.class === 'Fusio\\Impl\\Worker\\Action\\WorkerJava') {
+        action.config.code = document.getText();
+    } else if (action.class === 'Fusio\\Impl\\Worker\\Action\\WorkerJavascript') {
+        action.config.code = document.getText();
+    } else if (action.class === 'Fusio\\Impl\\Worker\\Action\\WorkerPHP') {
+        action.config.code = document.getText();
+    } else if (action.class === 'Fusio\\Impl\\Worker\\Action\\WorkerPython') {
+        action.config.code = document.getText();
     } else {
         vscode.window.showInformationMessage('Provided action class is not supported');
         return;
@@ -86,6 +94,33 @@ function create(client: Client, document: vscode.TextDocument, registry: ActionR
             engine: 'Fusio\\Engine\\Factory\\Resolver\\PhpClass',
             config: {
                 sql: document.getText()
+            }
+        };
+    } else if (extension === '.java') {
+        action = {
+            name: name,
+            class: 'Fusio\\Impl\\Worker\\Action\\WorkerJava',
+            engine: 'Fusio\\Engine\\Factory\\Resolver\\PhpClass',
+            config: {
+                code: document.getText()
+            }
+        };
+    } else if (extension === '.js') {
+        action = {
+            name: name,
+            class: 'Fusio\\Impl\\Worker\\Action\\WorkerJavascript',
+            engine: 'Fusio\\Engine\\Factory\\Resolver\\PhpClass',
+            config: {
+                code: document.getText()
+            }
+        };
+    } else if (extension === '.py') {
+        action = {
+            name: name,
+            class: 'Fusio\\Impl\\Worker\\Action\\WorkerPython',
+            engine: 'Fusio\\Engine\\Factory\\Resolver\\PhpClass',
+            config: {
+                code: document.getText()
             }
         };
     } else {
