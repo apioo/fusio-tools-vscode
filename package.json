@@ -15,7 +15,7 @@
 		"REST",
 		"Client"
 	],
-	"preview": true,
+	"preview": false,
 	"repository": "https://github.com/apioo/fusio-tools-vscode",
 	"engines": {
 		"vscode": "^1.57.0"
