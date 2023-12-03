@@ -1,14 +1,13 @@
-
 import * as vscode from 'vscode';
-import { Client } from '../Client';
+import {ClientFactory} from '../ClientFactory';
 
-async function logoutCommand(context: vscode.ExtensionContext, client: Client, onLogout: Function) {
-    if (!client.hasValidAccessToken()) {
+async function logoutCommand(context: vscode.ExtensionContext, clientFactory: ClientFactory, onLogout: Function) {
+    if (!clientFactory.hasValidAccessToken()) {
         vscode.window.showInformationMessage('You are not authenticated!');
         return;
     }
 
-    client.logout(onLogout);
+    clientFactory.logout(onLogout);
 
     vscode.window.showInformationMessage('Logout successful!');
 }

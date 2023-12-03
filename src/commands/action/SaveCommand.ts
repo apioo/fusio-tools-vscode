@@ -1,88 +1,87 @@
-
-import { Action } from 'fusio-sdk/dist/src/generated/backend/Action';
+import { BackendAction } from 'fusio-sdk/dist/src/BackendAction';
+import { CommonMessageException } from 'fusio-sdk/dist/src/CommonMessageException';
 import path = require('path');
 import * as vscode from 'vscode';
 import { ActionRegistry } from '../../ActionRegistry';
-import { Client } from '../../Client';
-import { AxiosError } from "axios";
+import { ClientFactory } from '../../ClientFactory';
 import { ActionView } from '../../views/ActionView';
 
-function saveCommand(context: vscode.ExtensionContext, client: Client, registry: ActionRegistry, actionView: ActionView, document: vscode.TextDocument) {
-    if (!client.hasValidAccessToken()) {
+async function saveCommand(context: vscode.ExtensionContext, clientFactory: ClientFactory, registry: ActionRegistry, actionView: ActionView, document: vscode.TextDocument) {
+    if (!clientFactory.hasValidAccessToken()) {
         return;
     }
 
-    const action = registry.get(document.uri);
-    if (!action) {
-        // found no action for this file look whether we can find it
-        client.getBackend().getBackendActionByActionId(getActionName(document.uri)).backendActionActionGet()
-            .then((resp) => {
-                registry.set(document.uri, resp.data);
-                update(client, document, resp.data);
-                actionView.refresh();
-            })
-            .catch((error: AxiosError) => {
-                if (!error.response) {
-                    return;
-                }
-
-                if (error.response.status === 404) {
-                    // in case it does not exist create action
-                    create(client, document, registry);
-                    actionView.refresh();
-                } else {
-                    client.showErrorResponse(error);
-                }
-            });
-    } else {
-        update(client, document, action);
+    let action = registry.get(document.uri);
+    if (action) {
+        await update(clientFactory, document, action);
         actionView.refresh();
+        return;
+    }
+
+    try {
+        // found no action for this file look whether we can find it at the remote instance
+        action = await clientFactory.factory().backend().action().get(getActionName(document.uri));
+        if (action) {
+            registry.set(document.uri, action);
+            await update(clientFactory, document, action);
+            actionView.refresh();    
+        }
+    } catch (error) {
+        if (error instanceof CommonMessageException) {
+            // in case it does not exist create action
+            await create(clientFactory, document, registry);
+            actionView.refresh();
+        }
     }
 }
 
 export default saveCommand;
 
-function update(client: Client, document: vscode.TextDocument, action: Action) {
+async function update(clientFactory: ClientFactory, document: vscode.TextDocument, action: BackendAction) {
     if (!action.config) {
         action.config = {};
     }
 
-    if (action.class === 'Fusio\\Adapter\\Php\\Action\\PhpSandbox') {
+    if (action.class === 'Fusio.Adapter.Php.Action.PhpSandbox') {
         action.config.code = document.getText();
-    } else if (action.class === 'Fusio\\Adapter\\Sql\\Action\\SqlSelect') {
+    } else if (action.class === 'Fusio.Adapter.Sql.Action.SqlSelect') {
         action.config.sql = document.getText();
-    } else if (action.class === 'Fusio\\Impl\\Worker\\Action\\WorkerJava') {
+    } else if (action.class === 'Fusio.Adapter.Util.Action.UtilStaticResponse') {
+        action.config.response = document.getText();
+    } else if (action.class === 'Fusio.Impl.Worker.Action.WorkerJava') {
         action.config.code = document.getText();
-    } else if (action.class === 'Fusio\\Impl\\Worker\\Action\\WorkerJavascript') {
+    } else if (action.class === 'Fusio.Impl.Worker.Action.WorkerJavascript') {
         action.config.code = document.getText();
-    } else if (action.class === 'Fusio\\Impl\\Worker\\Action\\WorkerPHP') {
+    } else if (action.class === 'Fusio.Impl.Worker.Action.WorkerPHP') {
         action.config.code = document.getText();
-    } else if (action.class === 'Fusio\\Impl\\Worker\\Action\\WorkerPython') {
+    } else if (action.class === 'Fusio.Impl.Worker.Action.WorkerPython') {
         action.config.code = document.getText();
     } else {
         vscode.window.showInformationMessage('Provided action class is not supported');
         return;
     }
 
-    client.getBackend().getBackendActionByActionId('' + action.id).backendActionActionUpdate(action)
-        .then((resp) => {
+    try {
+        const message = await clientFactory.factory().backend().action().update('' + action.id, action);
+        if (message.success === true) {
             vscode.window.showInformationMessage('Update successful!');
-        })
-        .catch((error) => {
-            client.showErrorResponse(error);
-        });
+        } else {
+            vscode.window.showErrorMessage('Error: ' + message.message);
+        }
+    } catch (error) {
+        clientFactory.showErrorResponse(error);
+    }
 }
 
-function create(client: Client, document: vscode.TextDocument, registry: ActionRegistry) {
+async function create(clientFactory: ClientFactory, document: vscode.TextDocument, registry: ActionRegistry) {
     const name = getActionName(document.uri);
     const extension = path.parse(document.uri.path).ext;
 
-    let action: Action;
+    let action: BackendAction;
     if (extension === '.php') {
         action = {
             name: name,
-            class: 'Fusio\\Adapter\\Php\\Action\\PhpSandbox',
-            engine: 'Fusio\\Engine\\Factory\\Resolver\\PhpClass',
+            class: 'Fusio.Adapter.Php.Action.PhpSandbox',
             config: {
                 code: document.getText()
             }
@@ -90,17 +89,23 @@ function create(client: Client, document: vscode.TextDocument, registry: ActionR
     } else if (extension === '.sql') {
         action = {
             name: name,
-            class: 'Fusio\\Adapter\\Sql\\Action\\SqlSelect',
-            engine: 'Fusio\\Engine\\Factory\\Resolver\\PhpClass',
+            class: 'Fusio.Adapter.Sql.Action.SqlSelect',
             config: {
                 sql: document.getText()
+            }
+        };
+    } else if (extension === '.json') {
+        action = {
+            name: name,
+            class: 'Fusio.Adapter.Util.Action.UtilStaticResponse',
+            config: {
+                response: document.getText()
             }
         };
     } else if (extension === '.java') {
         action = {
             name: name,
-            class: 'Fusio\\Impl\\Worker\\Action\\WorkerJava',
-            engine: 'Fusio\\Engine\\Factory\\Resolver\\PhpClass',
+            class: 'Fusio.Impl.Worker.Action.WorkerJava',
             config: {
                 code: document.getText()
             }
@@ -108,8 +113,7 @@ function create(client: Client, document: vscode.TextDocument, registry: ActionR
     } else if (extension === '.js') {
         action = {
             name: name,
-            class: 'Fusio\\Impl\\Worker\\Action\\WorkerJavascript',
-            engine: 'Fusio\\Engine\\Factory\\Resolver\\PhpClass',
+            class: 'Fusio.Impl.Worker.Action.WorkerJavascript',
             config: {
                 code: document.getText()
             }
@@ -117,8 +121,7 @@ function create(client: Client, document: vscode.TextDocument, registry: ActionR
     } else if (extension === '.py') {
         action = {
             name: name,
-            class: 'Fusio\\Impl\\Worker\\Action\\WorkerPython',
-            engine: 'Fusio\\Engine\\Factory\\Resolver\\PhpClass',
+            class: 'Fusio.Impl.Worker.Action.WorkerPython',
             config: {
                 code: document.getText()
             }
@@ -128,13 +131,16 @@ function create(client: Client, document: vscode.TextDocument, registry: ActionR
         return;
     }
 
-    client.getBackend().getBackendAction().backendActionActionCreate(action)
-        .then((resp) => {
+    try {
+        const message = await clientFactory.factory().backend().action().create(action);
+        if (message.success === true) {
             vscode.window.showInformationMessage('Create successful!');
-        })
-        .catch((error) => {
-            client.showErrorResponse(error);
-        });
+        } else {
+            vscode.window.showErrorMessage('Error: ' + message.message);
+        }
+    } catch (error) {
+        clientFactory.showErrorResponse(error);
+    }
 }
 
 function getActionName(uri: vscode.Uri) {

@@ -1,18 +1,18 @@
 import * as vscode from 'vscode';
-import { Schema } from 'fusio-sdk/dist/src/generated/backend/Schema';
-import { Client } from '../Client';
+import { BackendSchema } from 'fusio-sdk/dist/src/BackendSchema';
+import { ClientFactory } from '../ClientFactory';
 import { Repository } from '../Repository';
 import path = require('path');
 
-export class SchemaView implements vscode.TreeDataProvider<Schema> {
+export class SchemaView implements vscode.TreeDataProvider<BackendSchema> {
 	private context: vscode.ExtensionContext;
-	private client: Client;
-    private repository: Repository<Schema>;
+	private clientFactory: ClientFactory;
+    private repository: Repository<BackendSchema>;
     private emitter: vscode.EventEmitter<void> = new vscode.EventEmitter<void>();
 
-	constructor(context: vscode.ExtensionContext, client: Client, repository: Repository<Schema>) {
+	constructor(context: vscode.ExtensionContext, clientFactory: ClientFactory, repository: Repository<BackendSchema>) {
         this.context = context;
-        this.client = client;
+        this.clientFactory = clientFactory;
         this.repository = repository;
 
 		const view = vscode.window.createTreeView('schemaView', {
@@ -30,7 +30,7 @@ export class SchemaView implements vscode.TreeDataProvider<Schema> {
         this.emitter.fire();
     }
 
-    public getTreeItem(schema: Schema): vscode.TreeItem {
+    public getTreeItem(schema: BackendSchema): vscode.TreeItem {
         return {
             label: schema.name,
             id: '' + schema.id,
@@ -44,20 +44,20 @@ export class SchemaView implements vscode.TreeDataProvider<Schema> {
         };
     }
 
-    public getChildren(): vscode.ProviderResult<Schema[]> {
+    public getChildren(): vscode.ProviderResult<BackendSchema[]> {
         return new Promise(resolve => {
-            if (!this.client.hasValidAccessToken()) {
+            if (!this.clientFactory.hasValidAccessToken()) {
                 resolve([]);
                 return;
             }
 
-            this.client.getBackend().getBackendSchema().backendActionSchemaGetAll({count: 1024}).then(async (resp) => {
-                if (!resp.data.entry) {
+            this.clientFactory.factory().backend().schema().getAll(0, 1024).then(async (resp) => {
+                if (!resp.entry) {
                     return;
                 }
 
-                this.repository.set(resp.data.entry);
-                resolve(resp.data.entry);
+                this.repository.set(resp.entry);
+                resolve(resp.entry);
             })
             .catch((error) => {
                 resolve([]);

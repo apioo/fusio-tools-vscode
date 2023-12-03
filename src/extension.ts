@@ -1,10 +1,9 @@
-
-import { Action } from 'fusio-sdk/dist/src/generated/backend/Action';
-import { Connection } from 'fusio-sdk/dist/src/generated/backend/Connection';
-import { Schema } from 'fusio-sdk/dist/src/generated/backend/Schema';
+import {BackendAction} from 'fusio-sdk/dist/src/BackendAction';
+import {BackendConnection} from 'fusio-sdk/dist/src/BackendConnection';
+import {BackendSchema} from 'fusio-sdk/dist/src/BackendSchema';
 import * as vscode from 'vscode';
-import { ActionRegistry } from './ActionRegistry';
-import { Client } from './Client';
+import {ActionRegistry} from './ActionRegistry';
+import {ClientFactory} from './ClientFactory';
 import executeCommand from './commands/action/ExecuteCommand';
 import loginCommand from './commands/LoginCommand';
 import logoutCommand from './commands/LogoutCommand';
@@ -12,18 +11,18 @@ import actionOpenCommand from './commands/action/OpenCommand';
 import saveCommand from './commands/action/SaveCommand';
 import schemaOpenCommand from './commands/schema/OpenCommand';
 import connectionOpenCommand from './commands/connection/OpenCommand';
-import { ActionView } from './views/ActionView';
-import { ConnectionView } from './views/ConnectionView';
-import { SchemaView } from './views/SchemaView';
-import { Repository } from './Repository';
-import { CompletionProvider } from './CompletionProvider';
+import {ActionView} from './views/ActionView';
+import {ConnectionView} from './views/ConnectionView';
+import {SchemaView} from './views/SchemaView';
+import {Repository} from './Repository';
+import {CompletionProvider} from './CompletionProvider';
 
 export function activate(context: vscode.ExtensionContext) {
-	let client = new Client(context);
+	let client = new ClientFactory(context);
 	let registry = new ActionRegistry();
-	let actionRepository = new Repository<Action>();
-	let schemaRepository = new Repository<Schema>();
-	let connectionRepository = new Repository<Connection>();
+	let actionRepository = new Repository<BackendAction>();
+	let schemaRepository = new Repository<BackendSchema>();
+	let connectionRepository = new Repository<BackendConnection>();
 	let actionView = new ActionView(context, client, actionRepository);
 	let schemaView = new SchemaView(context, client, schemaRepository);
 	let connectionView = new ConnectionView(context, client, connectionRepository);
@@ -55,7 +54,7 @@ export function activate(context: vscode.ExtensionContext) {
 		});
 	}));
 
-	context.subscriptions.push(vscode.commands.registerCommand('fusio.action.open', (action: Action) => {
+	context.subscriptions.push(vscode.commands.registerCommand('fusio.action.open', (action: BackendAction) => {
 		actionOpenCommand(context, client, registry, action);
 	}));
 
@@ -75,11 +74,11 @@ export function activate(context: vscode.ExtensionContext) {
 		executeCommand(context, client, registry, channel, vscode.window.activeTextEditor.document);
 	}));
 	
-	context.subscriptions.push(vscode.commands.registerCommand('fusio.schema.open', (schema: Schema) => {
+	context.subscriptions.push(vscode.commands.registerCommand('fusio.schema.open', (schema: BackendSchema) => {
 		schemaOpenCommand(context, client, schema);
 	}));
 
-	context.subscriptions.push(vscode.commands.registerCommand('fusio.connection.open', (connection: Connection) => {
+	context.subscriptions.push(vscode.commands.registerCommand('fusio.connection.open', (connection: BackendConnection) => {
 		connectionOpenCommand(context, client, connection);
 	}));
 

@@ -1,19 +1,18 @@
-
-import { Action } from "fusio-sdk/dist/src/generated/backend/Action";
-import { Uri } from "vscode";
+import {BackendAction} from "fusio-sdk/dist/src/BackendAction";
+import {Uri} from "vscode";
 
 export class ActionRegistry {
-    private container: Map<string, Action>
+    private container: Map<string, BackendAction>;
 
     constructor() {
         this.container = new Map();
     }
 
-    public set(uri: Uri, action: Action) {
+    public set(uri: Uri, action: BackendAction) {
         this.container.set(uri.toString(), action);
     }
 
-    public get(uri: Uri): Action|undefined {
+    public get(uri: Uri): BackendAction|undefined {
         return this.container.get(uri.toString());
     }
 }

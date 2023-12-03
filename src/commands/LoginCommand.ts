@@ -1,46 +1,29 @@
-
 import * as vscode from 'vscode';
-import { Client } from '../Client';
+import {ClientFactory} from '../ClientFactory';
 
-async function loginCommand(context: vscode.ExtensionContext, client: Client, onLogin: Function) {
-    const accessToken = context.workspaceState.get<string>('access_token');
-
-    if (client.hasValidAccessToken()) {
+async function loginCommand(context: vscode.ExtensionContext, clientFactory: ClientFactory, onLogin: Function) {
+    if (clientFactory.hasValidAccessToken()) {
         vscode.window.showInformationMessage('You are already authenticated!');
         return;
     }
 
-    let fusioUrl = await vscode.window.showInputBox({
-        title: 'Url',
-        value: '',
-        placeHolder: 'Endpoint url of your Fusion instance i.e. https://demo.fusio-project.org/'
-    });
+    const config = vscode.workspace.getConfiguration('fusio');
+    let baseUrl = config.get<string>('base_url');
+    const clientId = config.get<string>('client_id');
+    const clientSecret = config.get<string>('client_secret');
 
-    const username = await vscode.window.showInputBox({
-        title: 'Username',
-        value: '',
-        placeHolder: 'Your username'
-    });
-    
-    const password = await vscode.window.showInputBox({
-        title: 'Password',
-        value: '',
-        placeHolder: 'Your password',
-        password: true
-    });
-
-    if (!fusioUrl || !username || !password) {
-        vscode.window.showInformationMessage('Provided an invalid url, username or password');
+    if (!baseUrl || !clientId || !clientSecret) {
+        vscode.window.showInformationMessage('Provided an invalid url, client id or client secret, please adjust the Fusio settings');
         return;
     }
 
     // normalize url
-    fusioUrl = fusioUrl.trim();
-    if (fusioUrl.endsWith('/')) {
-        fusioUrl = fusioUrl.slice(0, -1);
+    baseUrl = baseUrl.trim();
+    if (baseUrl.endsWith('/')) {
+        baseUrl = baseUrl.slice(0, -1);
     }
 
-    client.login(fusioUrl, username, password, onLogin);
+    clientFactory.login(baseUrl, clientId, clientSecret, onLogin);
 }
 
 export default loginCommand;

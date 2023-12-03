@@ -1,10 +1,10 @@
 {
 	"name": "fusio",
-	"version": "0.1.5",
+	"version": "1.0.1",
 	"publisher": "Fusio",
 	"license": "MIT",
 	"displayName": "fusio",
-	"description": "Simple action development for Fusio",
+	"description": "Fusio is an open source API management platform which helps to create innovative API solutions",
 	"icon": "media/fusio_128px.png",
 	"categories": [
 		"Other"
@@ -94,7 +94,27 @@
 				"view": "actionView",
 				"contents": "In order to load actions you need to connect to a Fusio instance. Please use the login command to authenticate.\n[Login](command:fusio.login)"
 			}
-		]
+		],
+		"configuration": {
+			"title": "Fusio",
+			"properties": {
+				"fusio.base_url": {
+					"type": "string",
+					"default": "",
+					"description": "Endpoint url of your Fusion instance"
+				},
+				"fusio.client_id": {
+					"type": "string",
+					"default": "",
+					"description": "The client id"
+			  	},
+				"fusio.client_secret": {
+					"type": "string",
+					"default": "",
+					"description": "The client secret"
+				}
+			}
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run package",
@@ -125,6 +145,6 @@
 		"webpack-cli": "^4.7.0"
 	},
 	"dependencies": {
-		"fusio-sdk": "^1.1.1"
+		"fusio-sdk": "^4.0.0"
 	}
 }

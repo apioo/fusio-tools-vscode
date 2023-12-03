@@ -1,6 +1,6 @@
 
 export class Repository<T> {
-    private container: Array<T>
+    private container: Array<T>;
 
     public constructor() {
         this.container = [];

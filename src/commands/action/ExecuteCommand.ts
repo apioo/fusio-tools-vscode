@@ -1,10 +1,9 @@
-
 import * as vscode from 'vscode';
-import { ActionRegistry } from '../../ActionRegistry';
-import { Client } from '../../Client';
+import {ActionRegistry} from '../../ActionRegistry';
+import {ClientFactory} from '../../ClientFactory';
 
-async function executeCommand(context: vscode.ExtensionContext, client: Client, registry: ActionRegistry, channel: vscode.OutputChannel, document: vscode.TextDocument) {
-    if (!client.hasValidAccessToken()) {
+async function executeCommand(context: vscode.ExtensionContext, clientFactory: ClientFactory, registry: ActionRegistry, channel: vscode.OutputChannel, document: vscode.TextDocument) {
+    if (!clientFactory.hasValidAccessToken()) {
         return;
     }
 
@@ -35,17 +34,17 @@ async function executeCommand(context: vscode.ExtensionContext, client: Client, 
     }
     */
 
-    client.getBackend().getBackendActionExecuteByActionId('' + action.id).backendActionActionExecute(options)
-        .then((resp) => {
-            channel.show();
-            channel.appendLine('----------------------------------------------------------------');
-            channel.appendLine('Status-Code: ' + resp.data.statusCode);
-            channel.appendLine('');
-            channel.appendLine(JSON.stringify(resp.data.body, null, 4));
-        })
-        .catch((error) => {
-            client.showErrorResponse(error);
-        });
-};
+    try {
+        const response = await clientFactory.factory().backend().action().execute('' + action.id, options);
+
+        channel.show();
+        channel.appendLine('----------------------------------------------------------------');
+        channel.appendLine('Status-Code: ' + response.statusCode);
+        channel.appendLine('');
+        channel.appendLine(JSON.stringify(response.body, null, 4));
+    } catch (error) {
+        clientFactory.showErrorResponse(error);
+    }
+}
 
 export default executeCommand;

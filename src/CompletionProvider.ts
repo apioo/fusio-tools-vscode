@@ -1,21 +1,28 @@
-
 import * as vscode from 'vscode';
-import { Connection } from "fusio-sdk/dist/src/generated/backend/Connection";
-import { CancellationToken, CompletionContext, CompletionItem, CompletionItemProvider, CompletionList, Position, ProviderResult, TextDocument } from "vscode";
-import { Repository } from "./Repository";
+import {
+    CancellationToken,
+    CompletionContext,
+    CompletionItem,
+    CompletionItemProvider,
+    Position,
+    ProviderResult,
+    TextDocument
+} from 'vscode';
+import {BackendConnection} from "fusio-sdk/dist/src/BackendConnection";
+import {Repository} from "./Repository";
+import {TextDecoder} from 'util';
 import path = require('path');
 import yaml = require('js-yaml');
-import { TextDecoder } from 'util';
 
 export class CompletionProvider implements CompletionItemProvider {
 
-    private connectionRepository: Repository<Connection>;
+    private connectionRepository: Repository<BackendConnection>;
     private data: any;
 
-    public constructor(connectionRepository: Repository<Connection>) {
+    public constructor(connectionRepository: Repository<BackendConnection>) {
         this.connectionRepository = connectionRepository;
         this.loadApiData().then((data) => {
-            this.data = data
+            this.data = data;
         });
     }
 
@@ -50,7 +57,7 @@ export class CompletionProvider implements CompletionItemProvider {
     private createConnectionsProposals(): CompletionItem[] {
         let result: CompletionItem[] = [];
         this.connectionRepository.getAll().forEach((connection) => {
-            let item = new vscode.CompletionItem('' + connection.name, vscode.CompletionItemKind.Text)
+            let item = new vscode.CompletionItem('' + connection.name, vscode.CompletionItemKind.Text);
             item.insertText = '' + connection.name;
 
             result.push(item);
@@ -78,7 +85,7 @@ export class CompletionProvider implements CompletionItemProvider {
             if (method.arguments) {
                 let parts: string[] = [];
                 method.arguments.forEach((arg: any) => {
-                    parts.push(arg.type + " " + arg.name)
+                    parts.push(arg.type + " " + arg.name);
                 });
     
                 detail += "(" + parts.join(", ") + ")";
@@ -88,7 +95,7 @@ export class CompletionProvider implements CompletionItemProvider {
                 detail = ': ' + method.return.type;
             }
 
-            let item = new vscode.CompletionItem(label, vscode.CompletionItemKind.Method)
+            let item = new vscode.CompletionItem(label, vscode.CompletionItemKind.Method);
             item.detail = detail;
             item.documentation = documentation;
             item.insertText = methodName;
@@ -106,7 +113,7 @@ export class CompletionProvider implements CompletionItemProvider {
 
         let result = [];
         for (let key in this.data.api) {
-            let item = new vscode.CompletionItem(key, vscode.CompletionItemKind.Variable)
+            let item = new vscode.CompletionItem(key, vscode.CompletionItemKind.Variable);
             item.documentation = this.data.api[key].description;
             item.insertText = key;
 

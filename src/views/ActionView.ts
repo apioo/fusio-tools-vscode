@@ -1,18 +1,18 @@
 import * as vscode from 'vscode';
-import { Action } from 'fusio-sdk/dist/src/generated/backend/Action';
-import { Client } from '../Client';
-import { Repository } from '../Repository';
+import {BackendAction} from 'fusio-sdk/dist/src/BackendAction';
+import {ClientFactory} from '../ClientFactory';
+import {Repository} from '../Repository';
 import path = require('path');
 
-export class ActionView implements vscode.TreeDataProvider<Action> {
+export class ActionView implements vscode.TreeDataProvider<BackendAction> {
 	private context: vscode.ExtensionContext;
-	private client: Client;
-    private repository: Repository<Action>;
+	private clientFactory: ClientFactory;
+    private repository: Repository<BackendAction>;
     private emitter: vscode.EventEmitter<void> = new vscode.EventEmitter<void>();
 
-	constructor(context: vscode.ExtensionContext, client: Client, repository: Repository<Action>) {
+	constructor(context: vscode.ExtensionContext, clientFactory: ClientFactory, repository: Repository<BackendAction>) {
         this.context = context;
-        this.client = client;
+        this.clientFactory = clientFactory;
         this.repository = repository;
 
 		const view = vscode.window.createTreeView('actionView', {
@@ -30,7 +30,7 @@ export class ActionView implements vscode.TreeDataProvider<Action> {
         this.emitter.fire();
     }
 
-    public getTreeItem(action: Action): vscode.TreeItem {
+    public getTreeItem(action: BackendAction): vscode.TreeItem {
         return {
             label: action.name,
             id: '' + action.id,
@@ -44,21 +44,21 @@ export class ActionView implements vscode.TreeDataProvider<Action> {
         };
     }
 
-    public getChildren(): vscode.ProviderResult<Action[]> {
+    public getChildren(): vscode.ProviderResult<BackendAction[]> {
         return new Promise(resolve => {
-            if (!this.client.hasValidAccessToken()) {
+            if (!this.clientFactory.hasValidAccessToken()) {
                 resolve([]);
                 return;
             }
 
-            this.client.getBackend().getBackendAction().backendActionActionGetAll({count: 1024})
+            this.clientFactory.factory().backend().action().getAll(0, 1024)
                 .then((resp) => {
-                    if (!resp.data.entry) {
+                    if (!resp.entry) {
                         return;
                     }
 
-                    this.repository.set(resp.data.entry);
-                    resolve(resp.data.entry);
+                    this.repository.set(resp.entry);
+                    resolve(resp.entry);
                 })
                 .catch((error) => {
                     resolve([]);
