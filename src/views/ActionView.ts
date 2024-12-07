@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import {BackendAction} from 'fusio-sdk/dist/src/BackendAction';
+import {BackendAction} from 'fusio-sdk';
 import {ClientFactory} from '../ClientFactory';
 import {Repository} from '../Repository';
 import path = require('path');

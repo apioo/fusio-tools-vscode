@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import {Client} from "fusio-sdk/dist/src/Client";
+import {Client} from "fusio-sdk";
 import {OAuth2} from "sdkgen-client";
 import {TokenStore} from "./TokenStore";
 
@@ -37,6 +37,7 @@ export class ClientFactory {
         await this.context.workspaceState.update('fusio_url', baseUrl);
         await this.context.workspaceState.update('fusio_client_id', clientId);
         await this.context.workspaceState.update('fusio_client_secret', clientSecret);
+        await this.context.workspaceState.update('fusio_access_token', undefined);
 
         try {
             const user = await this.factory().authorization().getWhoami();
@@ -60,6 +61,7 @@ export class ClientFactory {
         await this.context.workspaceState.update('fusio_url', undefined);
         await this.context.workspaceState.update('fusio_client_id', undefined);
         await this.context.workspaceState.update('fusio_client_secret', undefined);
+        await this.context.workspaceState.update('fusio_access_token', undefined);
 
         onLogout();
     }

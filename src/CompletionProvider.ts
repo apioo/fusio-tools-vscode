@@ -8,7 +8,7 @@ import {
     ProviderResult,
     TextDocument
 } from 'vscode';
-import {BackendConnection} from "fusio-sdk/dist/src/BackendConnection";
+import {BackendConnection} from "fusio-sdk";
 import {Repository} from "./Repository";
 import {TextDecoder} from 'util';
 import path = require('path');

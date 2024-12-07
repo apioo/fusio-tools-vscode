@@ -1,5 +1,5 @@
-import { BackendAction } from 'fusio-sdk/dist/src/BackendAction';
-import { CommonMessageException } from 'fusio-sdk/dist/src/CommonMessageException';
+import { BackendAction } from 'fusio-sdk';
+import { CommonMessageException } from 'fusio-sdk';
 import path = require('path');
 import * as vscode from 'vscode';
 import { ActionRegistry } from '../../ActionRegistry';
@@ -20,7 +20,7 @@ async function saveCommand(context: vscode.ExtensionContext, clientFactory: Clie
 
     try {
         // found no action for this file look whether we can find it at the remote instance
-        action = await clientFactory.factory().backend().action().get(getActionName(document.uri));
+        action = await clientFactory.factory().backend().action().get('~' + getActionName(document.uri));
         if (action) {
             registry.set(document.uri, action);
             await update(clientFactory, document, action);
@@ -54,6 +54,8 @@ async function update(clientFactory: ClientFactory, document: vscode.TextDocumen
         action.config.code = document.getText();
     } else if (action.class === 'Fusio.Impl.Worker.Action.WorkerPHP') {
         action.config.code = document.getText();
+    } else if (action.class === 'Fusio.Impl.Worker.Action.WorkerPHPLocal') {
+        action.config.code = document.getText();
     } else if (action.class === 'Fusio.Impl.Worker.Action.WorkerPython') {
         action.config.code = document.getText();
     } else {
@@ -81,7 +83,7 @@ async function create(clientFactory: ClientFactory, document: vscode.TextDocumen
     if (extension === '.php') {
         action = {
             name: name,
-            class: 'Fusio.Adapter.Php.Action.PhpSandbox',
+            class: 'Fusio.Impl.Worker.Action.WorkerPHPLocal',
             config: {
                 code: document.getText()
             }

@@ -1,4 +1,4 @@
-import {BackendAction} from "fusio-sdk/dist/src/BackendAction";
+import {BackendAction} from "fusio-sdk";
 import {Uri} from "vscode";
 
 export class ActionRegistry {

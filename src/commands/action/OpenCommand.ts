@@ -1,4 +1,4 @@
-import { BackendAction } from 'fusio-sdk/dist/src/BackendAction';
+import { BackendAction } from 'fusio-sdk';
 import { TextEncoder } from 'util';
 import * as vscode from 'vscode';
 import { ActionRegistry } from '../../ActionRegistry';
@@ -34,6 +34,9 @@ async function openCommand(context: vscode.ExtensionContext, clientFactory: Clie
             code = action.config?.code;
             language = 'js';
         } else if (action.class === 'Fusio.Impl.Worker.Action.WorkerPHP') {
+            code = action.config?.code;
+            language = 'php';
+        } else if (action.class === 'Fusio.Impl.Worker.Action.WorkerPHPLocal') {
             code = action.config?.code;
             language = 'php';
         } else if (action.class === 'Fusio.Impl.Worker.Action.WorkerPython') {

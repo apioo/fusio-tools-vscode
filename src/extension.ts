@@ -1,6 +1,6 @@
-import {BackendAction} from 'fusio-sdk/dist/src/BackendAction';
-import {BackendConnection} from 'fusio-sdk/dist/src/BackendConnection';
-import {BackendSchema} from 'fusio-sdk/dist/src/BackendSchema';
+import {BackendAction} from 'fusio-sdk';
+import {BackendConnection} from 'fusio-sdk';
+import {BackendSchema} from 'fusio-sdk';
 import * as vscode from 'vscode';
 import {ActionRegistry} from './ActionRegistry';
 import {ClientFactory} from './ClientFactory';

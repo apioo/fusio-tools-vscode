@@ -1,4 +1,4 @@
-import {BackendConnection} from 'fusio-sdk/dist/src/BackendConnection';
+import {BackendConnection} from 'fusio-sdk';
 import * as vscode from 'vscode';
 import {ClientFactory} from '../../ClientFactory';
 
