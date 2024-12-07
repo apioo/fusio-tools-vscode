@@ -132,7 +132,6 @@
 		"deploy": "vsce publish"
 	},
 	"devDependencies": {
-		"@types/glob": "^8.1.0",
 		"@types/js-yaml": "^4.0.1",
 		"@types/mocha": "^10.0.10",
 		"@types/node": "18.x",
