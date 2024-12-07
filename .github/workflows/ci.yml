@@ -1,20 +1,26 @@
-name: CI
 on:
-  - pull_request
-  - push
+  push:
+    branches:
+      - main
+    tags:
+      - v*
 jobs:
-  gen:
-    name: Code-Generation
-    runs-on: ubuntu-latest
+  build:
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Backend
-        uses: apioo/sdkgen-generator-action@v0.2.1
-        with:
-          client_id: '${{ secrets.SDKGEN_CLIENT_ID }}'
-          client_secret: '${{ secrets.SDKGEN_CLIENT_SECRET }}'
-      - name: Composer install
-        run: composer install --no-interaction --no-ansi --no-progress
-      - name: Run Psalm
-        run: vendor/bin/psalm --no-progress --show-info=false
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Install Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18.x
+    - run: npm install
+    - run: npm test-compile
+    - name: Publish
+      if: success() && startsWith(github.ref, 'refs/tags/') && matrix.os == 'ubuntu-latest'
+      run: npm run deploy
+      env:
+        VSCE_PAT: ${{ secrets.VSCE_PAT }}
