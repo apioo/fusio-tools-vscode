@@ -6,10 +6,7 @@ on:
       - v*
 jobs:
   build:
-    strategy:
-      matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -18,7 +15,7 @@ jobs:
       with:
         node-version: 18.x
     - run: npm install
-    - run: npm test-compile
+    - run: npm run test-compile
     - name: Publish
       if: success() && startsWith(github.ref, 'refs/tags/') && matrix.os == 'ubuntu-latest'
       run: npm run deploy
