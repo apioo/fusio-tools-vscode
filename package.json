@@ -109,7 +109,7 @@
 					"description": "The Fusio client id, this can be either your username or app client id",
 					"type": "string",
 					"default": ""
-			  	},
+				},
 				"fusio.client_secret": {
 					"title": "Client Secret",
 					"description": "The Fusio client secret, this can be either your password or app client secret",
@@ -128,7 +128,8 @@
 		"test-watch": "tsc -watch -p ./",
 		"pretest": "npm run test-compile && npm run lint",
 		"lint": "eslint src --ext ts",
-		"test": "node ./out/test/runTest.js"
+		"test": "node ./out/test/runTest.js",
+		"deploy": "vsce publish"
 	},
 	"devDependencies": {
 		"@types/glob": "^8.1.0",
@@ -138,6 +139,7 @@
 		"@types/vscode": "^1.57.0",
 		"@typescript-eslint/eslint-plugin": "^8.17.0",
 		"@typescript-eslint/parser": "^8.17.0",
+		"@vscode/vsce": "^3.2.1",
 		"eslint": "^9.16.0",
 		"glob": "^11.0.0",
 		"mocha": "^11.0.1",

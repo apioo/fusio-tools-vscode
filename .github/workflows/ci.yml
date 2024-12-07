@@ -1,0 +1,20 @@
+name: CI
+on:
+  - pull_request
+  - push
+jobs:
+  gen:
+    name: Code-Generation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Backend
+        uses: apioo/sdkgen-generator-action@v0.2.1
+        with:
+          client_id: '${{ secrets.SDKGEN_CLIENT_ID }}'
+          client_secret: '${{ secrets.SDKGEN_CLIENT_SECRET }}'
+      - name: Composer install
+        run: composer install --no-interaction --no-ansi --no-progress
+      - name: Run Psalm
+        run: vendor/bin/psalm --no-progress --show-info=false
