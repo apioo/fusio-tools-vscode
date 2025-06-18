@@ -18,7 +18,7 @@ import {Repository} from './Repository';
 import {CompletionProvider} from './CompletionProvider';
 
 export function activate(context: vscode.ExtensionContext) {
-	let client = new ClientFactory(context);
+	let client = new ClientFactory(context, vscode.workspace.getConfiguration());
 	let registry = new ActionRegistry();
 	let actionRepository = new Repository<BackendAction>();
 	let schemaRepository = new Repository<BackendSchema>();

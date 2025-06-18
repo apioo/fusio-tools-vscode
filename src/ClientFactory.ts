@@ -5,10 +5,9 @@ import {TokenStore} from "./TokenStore";
 
 export class ClientFactory {
     private client?: Client;
-    private context: vscode.ExtensionContext;
     private tokenStore: TokenStore;
 
-    public constructor(context: vscode.ExtensionContext) {
+    public constructor(private context: vscode.ExtensionContext, private configuration: vscode.WorkspaceConfiguration) {
         this.context = context;
         this.tokenStore = new TokenStore(context.workspaceState);
     }
@@ -18,9 +17,18 @@ export class ClientFactory {
             return this.client;
         }
 
-        const baseUrl = '' + this.context.workspaceState.get<string>('fusio_url');
-        const clientId = '' + this.context.workspaceState.get<string>('fusio_client_id');
-        const clientSecret = '' + this.context.workspaceState.get<string>('fusio_client_secret');
+        let baseUrl = this.configuration.get<string>('fusio.base_url');
+        const clientId = this.configuration.get<string>('fusio.client_id');
+        const clientSecret = this.configuration.get<string>('fusio.client_secret');
+        if (!baseUrl || !clientId || !clientSecret) {
+            throw new Error('Please configure the Fusio extension with your base URL, client ID, and client secret in the settings.');
+        }
+
+        // normalize url
+        baseUrl = baseUrl.trim();
+        if (baseUrl.endsWith('/')) {
+            baseUrl = baseUrl.slice(0, -1);
+        }
 
         const credentials = new OAuth2(
             clientId,
@@ -33,10 +41,9 @@ export class ClientFactory {
         return this.client = new Client(baseUrl, credentials);
     }
 
-    public async login(baseUrl: string, clientId: string, clientSecret: string, onLogin: Function) {
-        await this.context.workspaceState.update('fusio_url', baseUrl);
-        await this.context.workspaceState.update('fusio_client_id', clientId);
-        await this.context.workspaceState.update('fusio_client_secret', clientSecret);
+    public async login(onLogin: Function) {
+        this.client = undefined;
+
         await this.context.workspaceState.update('fusio_access_token', undefined);
 
         try {
@@ -58,9 +65,8 @@ export class ClientFactory {
             // no problem
         }
 
-        await this.context.workspaceState.update('fusio_url', undefined);
-        await this.context.workspaceState.update('fusio_client_id', undefined);
-        await this.context.workspaceState.update('fusio_client_secret', undefined);
+        this.client = undefined;
+
         await this.context.workspaceState.update('fusio_access_token', undefined);
 
         onLogout();

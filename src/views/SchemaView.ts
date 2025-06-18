@@ -53,6 +53,7 @@ export class SchemaView implements vscode.TreeDataProvider<BackendSchema> {
 
             this.clientFactory.factory().backend().schema().getAll(0, 1024).then(async (resp) => {
                 if (!resp.entry) {
+                    resolve([]);
                     return;
                 }
 

@@ -54,6 +54,7 @@ export class ActionView implements vscode.TreeDataProvider<BackendAction> {
             this.clientFactory.factory().backend().action().getAll(0, 1024)
                 .then((resp) => {
                     if (!resp.entry) {
+                        resolve([]);
                         return;
                     }
 

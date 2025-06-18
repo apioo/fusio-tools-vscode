@@ -53,6 +53,7 @@ export class ConnectionView implements vscode.TreeDataProvider<BackendConnection
 
             this.clientFactory.factory().backend().connection().getAll(0, 1024).then(async (resp) => {
                 if (!resp.entry) {
+                    resolve([]);
                     return;
                 }
 

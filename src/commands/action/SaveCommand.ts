@@ -31,6 +31,8 @@ async function saveCommand(context: vscode.ExtensionContext, clientFactory: Clie
             // in case it does not exist create action
             await create(clientFactory, document, registry);
             actionView.refresh();
+        } else {
+            throw error;
         }
     }
 }

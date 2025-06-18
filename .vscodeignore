@@ -5,8 +5,10 @@ node_modules/**
 src/**
 .gitignore
 .yarnrc
+webpack.config.js
 vsc-extension-quickstart.md
 **/tsconfig.json
-**/.eslintrc.json
+**/eslint.config.mjs
 **/*.map
 **/*.ts
+**/.vscode-test.*

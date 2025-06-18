@@ -7,23 +7,7 @@ async function loginCommand(context: vscode.ExtensionContext, clientFactory: Cli
         return;
     }
 
-    const config = vscode.workspace.getConfiguration('fusio');
-    let baseUrl = config.get<string>('base_url');
-    const clientId = config.get<string>('client_id');
-    const clientSecret = config.get<string>('client_secret');
-
-    if (!baseUrl || !clientId || !clientSecret) {
-        vscode.window.showInformationMessage('Provided an invalid url, client id or client secret, please adjust the Fusio settings');
-        return;
-    }
-
-    // normalize url
-    baseUrl = baseUrl.trim();
-    if (baseUrl.endsWith('/')) {
-        baseUrl = baseUrl.slice(0, -1);
-    }
-
-    clientFactory.login(baseUrl, clientId, clientSecret, onLogin);
+    clientFactory.login(onLogin);
 }
 
 export default loginCommand;
