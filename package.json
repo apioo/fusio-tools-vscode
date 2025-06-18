@@ -28,7 +28,7 @@
 				{
 					"id": "fusio",
 					"title": "Fusio",
-					"icon": "media/fusio_32px.png"
+					"icon": "fusio.svg"
 				}
 			]
 		},
@@ -67,17 +67,17 @@
 				{
 					"id": "actionView",
 					"name": "Actions",
-					"icon": "action.svg"
+					"icon": "../media/action.svg"
 				},
 				{
 					"id": "schemaView",
 					"name": "Schemas",
-					"icon": "schema.svg"
+					"icon": "../media/schema.svg"
 				},
 				{
 					"id": "connectionView",
 					"name": "Connections",
-					"icon": "connection.svg"
+					"icon": "../media/connection.svg"
 				}
 			]
 		},
@@ -141,6 +141,7 @@
 		"@types/js-yaml": "^4.0.1"
 	},
 	"dependencies": {
-		"fusio-sdk": "^5.1.0"
+		"fusio-sdk": "^5.1.17",
+		"js-yaml": "^4.1.0"
 	}
 }

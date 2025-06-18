@@ -85,7 +85,7 @@ async function create(clientFactory: ClientFactory, document: vscode.TextDocumen
     if (extension === '.php') {
         action = {
             name: name,
-            class: 'Fusio.Impl.Worker.Action.WorkerPHPLocal',
+            class: 'Fusio.Adapter.Worker.Action.WorkerPHPLocal',
             config: {
                 code: document.getText()
             }
@@ -93,7 +93,7 @@ async function create(clientFactory: ClientFactory, document: vscode.TextDocumen
     } else if (extension === '.sql') {
         action = {
             name: name,
-            class: 'Fusio.Adapter.Sql.Action.SqlSelect',
+            class: 'Fusio.Adapter.Sql.Action.Query.SqlQueryAll',
             config: {
                 sql: document.getText()
             }
@@ -109,7 +109,7 @@ async function create(clientFactory: ClientFactory, document: vscode.TextDocumen
     } else if (extension === '.java') {
         action = {
             name: name,
-            class: 'Fusio.Impl.Worker.Action.WorkerJava',
+            class: 'Fusio.Adapter.Worker.Action.WorkerJava',
             config: {
                 code: document.getText()
             }
@@ -117,7 +117,7 @@ async function create(clientFactory: ClientFactory, document: vscode.TextDocumen
     } else if (extension === '.js') {
         action = {
             name: name,
-            class: 'Fusio.Impl.Worker.Action.WorkerJavascript',
+            class: 'Fusio.Adapter.Worker.Action.WorkerJavascript',
             config: {
                 code: document.getText()
             }
@@ -125,7 +125,7 @@ async function create(clientFactory: ClientFactory, document: vscode.TextDocumen
     } else if (extension === '.py') {
         action = {
             name: name,
-            class: 'Fusio.Impl.Worker.Action.WorkerPython',
+            class: 'Fusio.Adapter.Worker.Action.WorkerPython',
             config: {
                 code: document.getText()
             }

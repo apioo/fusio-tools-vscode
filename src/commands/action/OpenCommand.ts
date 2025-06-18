@@ -21,25 +21,25 @@ async function openCommand(context: vscode.ExtensionContext, clientFactory: Clie
         if (action.class === 'Fusio.Adapter.Php.Action.PhpSandbox') {
             code = action.config?.code;
             language = 'php';
-        } else if (action.class === 'Fusio.Adapter.Sql.Action.SqlSelect') {
+        } else if (action.class === 'Fusio.Adapter.Sql.Action.Query.SqlQueryAll') {
             code = action.config?.sql;
             language = 'sql';
         } else if (action.class === 'Fusio.Adapter.Util.Action.UtilStaticResponse') {
             code = action.config?.response;
             language = 'json';
-        } else if (action.class === 'Fusio.Impl.Worker.Action.WorkerJava') {
+        } else if (action.class === 'Fusio.Adapter.Worker.Action.WorkerJava') {
             code = action.config?.code;
             language = 'java';
-        } else if (action.class === 'Fusio.Impl.Worker.Action.WorkerJavascript') {
+        } else if (action.class === 'Fusio.Adapter.Worker.Action.WorkerJavascript') {
             code = action.config?.code;
             language = 'js';
-        } else if (action.class === 'Fusio.Impl.Worker.Action.WorkerPHP') {
+        } else if (action.class === 'Fusio.Adapter.Worker.Action.WorkerPHP') {
             code = action.config?.code;
             language = 'php';
-        } else if (action.class === 'Fusio.Impl.Worker.Action.WorkerPHPLocal') {
+        } else if (action.class === 'Fusio.Adapter.Worker.Action.WorkerPHPLocal') {
             code = action.config?.code;
             language = 'php';
-        } else if (action.class === 'Fusio.Impl.Worker.Action.WorkerPython') {
+        } else if (action.class === 'Fusio.Adapter.Worker.Action.WorkerPython') {
             code = action.config?.code;
             language = 'py';
         } else {
