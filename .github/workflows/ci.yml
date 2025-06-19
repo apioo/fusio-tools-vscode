@@ -15,7 +15,9 @@ jobs:
       with:
         node-version: 18.x
     - run: npm install
-    - run: npm run test-compile
+    - run: npm run pretest
+    - run: npm run test
+    - run: npm run vscode:prepublish
     - name: Publish
       if: success() && startsWith(github.ref, 'refs/tags/')
       run: npm run deploy
