@@ -12,6 +12,11 @@ Fusio at: https://www.fusio-project.org/
 
 On the left sidebar Fusio lists Actions, Schemas and Connections of your remote instance:
 
+## Configuration
+
+Past installation you only need to provide the Fusio Base-Url of your Fusio instance and a Client-Id and Secret, after this the extension is ready to use.
+![Configuration](./media/configuration.png)
+
 ## Commands
 
 The following commands are available:
