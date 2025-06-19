@@ -23,7 +23,7 @@ The following commands are available:
 
 * `fusio.login`
 
-  Asks for the endpoint url and user credentials to obtain an access token.
+  Uses the credentials from the settings to authenticate the user.
 * `fusio.logout`
 
   Revokes an active access token and removes any locally stored tokens.
