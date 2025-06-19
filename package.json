@@ -28,7 +28,7 @@
 				{
 					"id": "fusio",
 					"title": "Fusio",
-					"icon": "fusio.svg"
+					"icon": "media/fusio.svg"
 				}
 			]
 		},
@@ -67,17 +67,17 @@
 				{
 					"id": "actionView",
 					"name": "Actions",
-					"icon": "../media/action.svg"
+					"icon": "media/action.svg"
 				},
 				{
 					"id": "schemaView",
 					"name": "Schemas",
-					"icon": "../media/schema.svg"
+					"icon": "media/schema.svg"
 				},
 				{
 					"id": "connectionView",
 					"name": "Connections",
-					"icon": "../media/connection.svg"
+					"icon": "media/connection.svg"
 				}
 			]
 		},
