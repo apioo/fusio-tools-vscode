@@ -43,8 +43,7 @@ export class ClientFactory {
 
     public async login(onLogin: Function) {
         this.client = undefined;
-
-        await this.context.workspaceState.update('fusio_access_token', undefined);
+        this.tokenStore.remove();
 
         try {
             const user = await this.factory().authorization().getWhoami();
@@ -66,8 +65,7 @@ export class ClientFactory {
         }
 
         this.client = undefined;
-
-        await this.context.workspaceState.update('fusio_access_token', undefined);
+        this.tokenStore.remove();
 
         onLogout();
     }

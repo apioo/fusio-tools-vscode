@@ -5,6 +5,7 @@ import * as vscode from 'vscode';
 import { ActionRegistry } from '../../ActionRegistry';
 import { ClientFactory } from '../../ClientFactory';
 import { ActionView } from '../../views/ActionView';
+import { ActionClass } from './ActionClass';
 
 async function saveCommand(context: vscode.ExtensionContext, clientFactory: ClientFactory, registry: ActionRegistry, actionView: ActionView, document: vscode.TextDocument) {
     if (!clientFactory.hasValidAccessToken()) {
@@ -44,21 +45,21 @@ async function update(clientFactory: ClientFactory, document: vscode.TextDocumen
         action.config = {};
     }
 
-    if (action.class === 'Fusio.Adapter.Php.Action.PhpSandbox') {
+    if (action.class === ActionClass.PhpSandbox) {
         action.config.code = document.getText();
-    } else if (action.class === 'Fusio.Adapter.Sql.Action.SqlSelect') {
+    } else if (action.class === ActionClass.SqlQueryAll) {
         action.config.sql = document.getText();
-    } else if (action.class === 'Fusio.Adapter.Util.Action.UtilStaticResponse') {
+    } else if (action.class === ActionClass.UtilStaticResponse) {
         action.config.response = document.getText();
-    } else if (action.class === 'Fusio.Impl.Worker.Action.WorkerJava') {
+    } else if (action.class === ActionClass.WorkerJava) {
         action.config.code = document.getText();
-    } else if (action.class === 'Fusio.Impl.Worker.Action.WorkerJavascript') {
+    } else if (action.class === ActionClass.WorkerJavascript) {
         action.config.code = document.getText();
-    } else if (action.class === 'Fusio.Impl.Worker.Action.WorkerPHP') {
+    } else if (action.class === ActionClass.WorkerPHP) {
         action.config.code = document.getText();
-    } else if (action.class === 'Fusio.Impl.Worker.Action.WorkerPHPLocal') {
+    } else if (action.class === ActionClass.WorkerPHPLocal) {
         action.config.code = document.getText();
-    } else if (action.class === 'Fusio.Impl.Worker.Action.WorkerPython') {
+    } else if (action.class === ActionClass.WorkerPython) {
         action.config.code = document.getText();
     } else {
         vscode.window.showInformationMessage('Provided action class is not supported');
@@ -85,7 +86,7 @@ async function create(clientFactory: ClientFactory, document: vscode.TextDocumen
     if (extension === '.php') {
         action = {
             name: name,
-            class: 'Fusio.Adapter.Worker.Action.WorkerPHPLocal',
+            class: ActionClass.WorkerPHPLocal,
             config: {
                 code: document.getText()
             }
@@ -93,7 +94,7 @@ async function create(clientFactory: ClientFactory, document: vscode.TextDocumen
     } else if (extension === '.sql') {
         action = {
             name: name,
-            class: 'Fusio.Adapter.Sql.Action.Query.SqlQueryAll',
+            class: ActionClass.SqlQueryAll,
             config: {
                 sql: document.getText()
             }
@@ -101,7 +102,7 @@ async function create(clientFactory: ClientFactory, document: vscode.TextDocumen
     } else if (extension === '.json') {
         action = {
             name: name,
-            class: 'Fusio.Adapter.Util.Action.UtilStaticResponse',
+            class: ActionClass.UtilStaticResponse,
             config: {
                 response: document.getText()
             }
@@ -109,7 +110,7 @@ async function create(clientFactory: ClientFactory, document: vscode.TextDocumen
     } else if (extension === '.java') {
         action = {
             name: name,
-            class: 'Fusio.Adapter.Worker.Action.WorkerJava',
+            class: ActionClass.WorkerJava,
             config: {
                 code: document.getText()
             }
@@ -117,7 +118,7 @@ async function create(clientFactory: ClientFactory, document: vscode.TextDocumen
     } else if (extension === '.js') {
         action = {
             name: name,
-            class: 'Fusio.Adapter.Worker.Action.WorkerJavascript',
+            class: ActionClass.WorkerJavascript,
             config: {
                 code: document.getText()
             }
@@ -125,7 +126,7 @@ async function create(clientFactory: ClientFactory, document: vscode.TextDocumen
     } else if (extension === '.py') {
         action = {
             name: name,
-            class: 'Fusio.Adapter.Worker.Action.WorkerPython',
+            class: ActionClass.WorkerPython,
             config: {
                 code: document.getText()
             }

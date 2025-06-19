@@ -3,6 +3,7 @@ import { TextEncoder } from 'util';
 import * as vscode from 'vscode';
 import { ActionRegistry } from '../../ActionRegistry';
 import { ClientFactory } from '../../ClientFactory';
+import { ActionClass } from './ActionClass';
 
 async function openCommand(context: vscode.ExtensionContext, clientFactory: ClientFactory, registry: ActionRegistry, action: BackendAction) {
     if (!clientFactory.hasValidAccessToken()) {
@@ -18,28 +19,28 @@ async function openCommand(context: vscode.ExtensionContext, clientFactory: Clie
 
         let code;
         let language;
-        if (action.class === 'Fusio.Adapter.Php.Action.PhpSandbox') {
+        if (action.class === ActionClass.PhpSandbox) {
             code = action.config?.code;
             language = 'php';
-        } else if (action.class === 'Fusio.Adapter.Sql.Action.Query.SqlQueryAll') {
+        } else if (action.class === ActionClass.SqlQueryAll) {
             code = action.config?.sql;
             language = 'sql';
-        } else if (action.class === 'Fusio.Adapter.Util.Action.UtilStaticResponse') {
+        } else if (action.class === ActionClass.UtilStaticResponse) {
             code = action.config?.response;
             language = 'json';
-        } else if (action.class === 'Fusio.Adapter.Worker.Action.WorkerJava') {
+        } else if (action.class === ActionClass.WorkerJava) {
             code = action.config?.code;
             language = 'java';
-        } else if (action.class === 'Fusio.Adapter.Worker.Action.WorkerJavascript') {
+        } else if (action.class === ActionClass.WorkerJavascript) {
             code = action.config?.code;
             language = 'js';
-        } else if (action.class === 'Fusio.Adapter.Worker.Action.WorkerPHP') {
+        } else if (action.class === ActionClass.WorkerPHP) {
             code = action.config?.code;
             language = 'php';
-        } else if (action.class === 'Fusio.Adapter.Worker.Action.WorkerPHPLocal') {
+        } else if (action.class === ActionClass.WorkerPHPLocal) {
             code = action.config?.code;
             language = 'php';
-        } else if (action.class === 'Fusio.Adapter.Worker.Action.WorkerPython') {
+        } else if (action.class === ActionClass.WorkerPython) {
             code = action.config?.code;
             language = 'py';
         } else {
