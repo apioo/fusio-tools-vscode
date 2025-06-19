@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+    .table {
+      width:100%;
+      border-spacing:0;
+      font-size:1.4em;
+    }
+
+    .table th {
+      padding:8px;
+      text-align:left;
+    }
+
+    .table td {
+      padding:8px;
+    }
+    </style>
+</head>
+<body>
+
+<h1>{{ name }}</h1>
+
+<table class="table">
+<thead>
+<tr>
+    <th>Name</th>
+    <th>Type</th>
+    <th>Length</th>
+    <th>Not-Null</th>
+</tr>
+</thead>
+<tbody>
+{{ columns }}
+</tbody>
+</table>
+
+</body>
+</html>

@@ -18,7 +18,7 @@ export class SchemaView implements vscode.TreeDataProvider<BackendSchema> {
 		const view = vscode.window.createTreeView('schemaView', {
             treeDataProvider: this,
             showCollapseAll: true,
-            canSelectMany: true,
+            canSelectMany: false,
         });
 
 		this.context.subscriptions.push(view);
@@ -58,6 +58,7 @@ export class SchemaView implements vscode.TreeDataProvider<BackendSchema> {
                 }
 
                 this.repository.set(resp.entry);
+
                 resolve(resp.entry);
             })
             .catch((error) => {

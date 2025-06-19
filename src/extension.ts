@@ -1,4 +1,4 @@
-import {BackendAction} from 'fusio-sdk';
+import {BackendAction, BackendDatabaseTable} from 'fusio-sdk';
 import {BackendConnection} from 'fusio-sdk';
 import {BackendSchema} from 'fusio-sdk';
 import * as vscode from 'vscode';
@@ -11,11 +11,13 @@ import actionOpenCommand from './commands/action/OpenCommand';
 import saveCommand from './commands/action/SaveCommand';
 import schemaOpenCommand from './commands/schema/OpenCommand';
 import connectionOpenCommand from './commands/connection/OpenCommand';
+import databaseTableOpenCommand from './commands/connection/OpenTableCommand';
 import {ActionView} from './views/ActionView';
 import {ConnectionView} from './views/ConnectionView';
 import {SchemaView} from './views/SchemaView';
 import {Repository} from './Repository';
 import {CompletionProvider} from './CompletionProvider';
+import { WebviewPanelRegistry } from './WebviewPanelRegistry';
 
 export function activate(context: vscode.ExtensionContext) {
 	let client = new ClientFactory(context, vscode.workspace.getConfiguration());
@@ -26,6 +28,10 @@ export function activate(context: vscode.ExtensionContext) {
 	let actionView = new ActionView(context, client, actionRepository);
 	let schemaView = new SchemaView(context, client, schemaRepository);
 	let connectionView = new ConnectionView(context, client, connectionRepository);
+	let connectionPanelRegistry = new WebviewPanelRegistry();
+	let connectionTablePanelRegistry = new WebviewPanelRegistry();
+	let schemaPanelRegistry = new WebviewPanelRegistry();
+
 	let channel = vscode.window.createOutputChannel('Fusio Response');
 
 	vscode.window.registerTreeDataProvider('actionView', actionView);
@@ -75,13 +81,16 @@ export function activate(context: vscode.ExtensionContext) {
 	}));
 	
 	context.subscriptions.push(vscode.commands.registerCommand('fusio.schema.open', (schema: BackendSchema) => {
-		schemaOpenCommand(context, client, schema);
+		schemaOpenCommand(context, client, schema, schemaPanelRegistry);
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand('fusio.connection.open', (connection: BackendConnection) => {
-		connectionOpenCommand(context, client, connection);
+		connectionOpenCommand(context, client, connection, connectionPanelRegistry);
 	}));
 
+	context.subscriptions.push(vscode.commands.registerCommand('fusio.connection.table.open', (connectionId: string, table: BackendDatabaseTable) => {
+		databaseTableOpenCommand(context, client, connectionId, table, connectionTablePanelRegistry);
+	}));
 }
 
 export function deactivate() {}

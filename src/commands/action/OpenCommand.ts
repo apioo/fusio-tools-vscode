@@ -69,7 +69,7 @@ async function openCommand(context: vscode.ExtensionContext, clientFactory: Clie
             registry.set(file, action);
 
             const document = await vscode.workspace.openTextDocument(file);
-            vscode.window.showTextDocument(document);
+            vscode.window.showTextDocument(document, vscode.ViewColumn.One);
         });
     } catch (error) {
         clientFactory.showErrorResponse(error);

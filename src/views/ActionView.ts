@@ -18,7 +18,7 @@ export class ActionView implements vscode.TreeDataProvider<BackendAction> {
 		const view = vscode.window.createTreeView('actionView', {
             treeDataProvider: this,
             showCollapseAll: true,
-            canSelectMany: true,
+            canSelectMany: false,
         });
 
 		this.context.subscriptions.push(view);
@@ -59,6 +59,7 @@ export class ActionView implements vscode.TreeDataProvider<BackendAction> {
                     }
 
                     this.repository.set(resp.entry);
+
                     resolve(resp.entry);
                 })
                 .catch((error) => {

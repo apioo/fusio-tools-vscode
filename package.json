@@ -1,6 +1,6 @@
 {
 	"name": "fusio",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"publisher": "Fusio",
 	"license": "MIT",
 	"displayName": "fusio",
@@ -60,23 +60,27 @@
 			{
 				"command": "fusio.connection.open",
 				"title": "Connection Open"
+			},
+			{
+				"command": "fusio.connection.table.open",
+				"title": "Connection Table Open"
 			}
 		],
 		"views": {
 			"fusio": [
 				{
 					"id": "actionView",
-					"name": "Actions",
+					"name": "Action",
 					"icon": "media/action.svg"
 				},
 				{
 					"id": "schemaView",
-					"name": "Schemas",
+					"name": "Schema",
 					"icon": "media/schema.svg"
 				},
 				{
 					"id": "connectionView",
-					"name": "Connections",
+					"name": "Connection",
 					"icon": "media/connection.svg"
 				}
 			]
