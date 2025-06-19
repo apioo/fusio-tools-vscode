@@ -4,7 +4,7 @@
 	"publisher": "Fusio",
 	"license": "MIT",
 	"displayName": "fusio",
-	"description": "Fusio is an open source API management platform which helps to create innovative API solutions",
+	"description": "Self-Hosted API Management for Builders",
 	"icon": "media/fusio_128px.png",
 	"categories": [
 		"Other"
