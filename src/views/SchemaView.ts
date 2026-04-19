@@ -5,16 +5,9 @@ import { Repository } from '../Repository';
 import path = require('path');
 
 export class SchemaView implements vscode.TreeDataProvider<BackendSchema> {
-	private context: vscode.ExtensionContext;
-	private clientFactory: ClientFactory;
-    private repository: Repository<BackendSchema>;
     private emitter: vscode.EventEmitter<void> = new vscode.EventEmitter<void>();
 
-	constructor(context: vscode.ExtensionContext, clientFactory: ClientFactory, repository: Repository<BackendSchema>) {
-        this.context = context;
-        this.clientFactory = clientFactory;
-        this.repository = repository;
-
+	constructor(private context: vscode.ExtensionContext, private clientFactory: ClientFactory, private repository: Repository<BackendSchema>) {
 		const view = vscode.window.createTreeView('schemaView', {
             treeDataProvider: this,
             showCollapseAll: true,

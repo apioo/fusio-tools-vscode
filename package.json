@@ -127,18 +127,18 @@
 		"deploy": "vsce publish"
 	},
 	"devDependencies": {
-		"@types/vscode": "^1.116.0",
+		"@types/js-yaml": "^4.0.1",
 		"@types/mocha": "^10.0.10",
-		"@types/node": "22.x",
-		"typescript-eslint": "^8.56.1",
-		"eslint": "^9.39.3",
-		"typescript": "^5.9.3",
-		"ts-loader": "^9.5.4",
-		"webpack": "^5.105.3",
-		"webpack-cli": "^6.0.1",
+		"@types/node": "^22.19.17",
+		"@types/vscode": "^1.116.0",
 		"@vscode/test-cli": "^0.0.12",
 		"@vscode/test-electron": "^2.5.2",
-		"@types/js-yaml": "^4.0.1"
+		"eslint": "^9.39.3",
+		"ts-loader": "^9.5.4",
+		"typescript": "^5.9.3",
+		"typescript-eslint": "^8.56.1",
+		"webpack": "^5.105.3",
+		"webpack-cli": "^6.0.1"
 	},
 	"dependencies": {
 		"fusio-sdk": "^7.0.0",

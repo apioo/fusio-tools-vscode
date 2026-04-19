@@ -14,4 +14,9 @@ export class WebviewPanelRegistry {
     public get(id: string): WebviewPanel|undefined {
         return this.container.get(id);
     }
+
+    public delete(id: string) {
+        this.container.delete(id);
+    }
+
 }

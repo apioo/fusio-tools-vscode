@@ -21,7 +21,12 @@ async function openCommand(context: vscode.ExtensionContext, clientFactory: Clie
         let panel = registry.get(key);
         if (panel === undefined) {
             panel = vscode.window.createWebviewPanel(key, '' + schema.name, vscode.ViewColumn.Two);
+
             registry.set(key, panel);
+
+            panel.onDidDispose(() => {
+                registry.delete(key);
+            }, null, context.subscriptions);
         } else {
             panel.reveal();
         }

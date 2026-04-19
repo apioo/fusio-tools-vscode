@@ -5,16 +5,9 @@ import {Repository} from '../Repository';
 import path = require('path');
 
 export class ActionView implements vscode.TreeDataProvider<BackendAction> {
-	private context: vscode.ExtensionContext;
-	private clientFactory: ClientFactory;
-    private repository: Repository<BackendAction>;
     private emitter: vscode.EventEmitter<void> = new vscode.EventEmitter<void>();
 
-	constructor(context: vscode.ExtensionContext, clientFactory: ClientFactory, repository: Repository<BackendAction>) {
-        this.context = context;
-        this.clientFactory = clientFactory;
-        this.repository = repository;
-
+	constructor(private context: vscode.ExtensionContext, private clientFactory: ClientFactory, private repository: Repository<BackendAction>) {
 		const view = vscode.window.createTreeView('actionView', {
             treeDataProvider: this,
             showCollapseAll: true,

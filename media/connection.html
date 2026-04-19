@@ -2,11 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline';">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
     p {
-        line-height:32px;
-        font-size:large;
+        line-height:28px;
+        font-size:normal;
+    }
+    
+    .table {
+      width:100%;
+      border-spacing:0;
+      font-size:1.2em;
+    }
+
+    .table th {
+      padding:8px;
+      text-align:left;
+    }
+
+    .table td {
+      padding:8px;
     }
     </style>
 </head>
@@ -15,6 +31,47 @@
 <h1>{{ name }}</h1>
 
 <p>{{ help }}</p>
+
+<hr>
+
+<div id="details">{{ details }}</div>
+
+<div id="entity"></div>
+
+<script>
+(function () {
+    const vscode = acquireVsCodeApi();
+
+    window.addEventListener('message', event => {
+        const message = event.data;
+        switch (message.type) {
+            case 'render':
+                {
+                    document.getElementById('entity').innerHTML = message.html;
+                    break;
+                }
+        }
+    });
+
+    const links = document.getElementsByClassName('table-link');
+    for (const link of links) {
+        link.addEventListener('click', event => {
+            const target = event.target;
+            if (target) {
+                event.preventDefault();
+
+                const connectionId = target.getAttribute('data-connection-id');
+                const tableName = target.getAttribute('data-table-name');
+
+                vscode.postMessage({
+                    type: 'getTable',
+                    args: [connectionId, tableName]
+                });
+            }
+        });
+    }
+})();
+</script>
 
 </body>
 </html>

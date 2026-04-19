@@ -1,4 +1,4 @@
-import {BackendAction, BackendDatabaseTable} from 'fusio-sdk';
+import {BackendAction} from 'fusio-sdk';
 import {BackendConnection} from 'fusio-sdk';
 import {BackendSchema} from 'fusio-sdk';
 import * as vscode from 'vscode';
@@ -11,7 +11,6 @@ import actionOpenCommand from './commands/action/OpenCommand';
 import saveCommand from './commands/action/SaveCommand';
 import schemaOpenCommand from './commands/schema/OpenCommand';
 import connectionOpenCommand from './commands/connection/OpenCommand';
-import databaseTableOpenCommand from './commands/connection/OpenTableCommand';
 import {ActionView} from './views/ActionView';
 import {ConnectionView} from './views/ConnectionView';
 import {SchemaView} from './views/SchemaView';
@@ -29,7 +28,6 @@ export function activate(context: vscode.ExtensionContext) {
 	let schemaView = new SchemaView(context, client, schemaRepository);
 	let connectionView = new ConnectionView(context, client, connectionRepository);
 	let connectionPanelRegistry = new WebviewPanelRegistry();
-	let connectionTablePanelRegistry = new WebviewPanelRegistry();
 	let schemaPanelRegistry = new WebviewPanelRegistry();
 
 	let channel = vscode.window.createOutputChannel('Fusio Response');
@@ -86,10 +84,6 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(vscode.commands.registerCommand('fusio.connection.open', (connection: BackendConnection) => {
 		connectionOpenCommand(context, client, connection, connectionPanelRegistry);
-	}));
-
-	context.subscriptions.push(vscode.commands.registerCommand('fusio.connection.table.open', (connectionId: string, table: BackendDatabaseTable) => {
-		databaseTableOpenCommand(context, client, connectionId, table, connectionTablePanelRegistry);
 	}));
 }
 
