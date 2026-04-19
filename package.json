@@ -50,6 +50,10 @@
 				"title": "Action Save"
 			},
 			{
+				"command": "fusio.action.run",
+				"title": "Action Run"
+			},
+			{
 				"command": "fusio.action.execute",
 				"title": "Action Execute"
 			},

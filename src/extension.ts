@@ -11,12 +11,15 @@ import actionOpenCommand from './commands/action/OpenCommand';
 import saveCommand from './commands/action/SaveCommand';
 import schemaOpenCommand from './commands/schema/OpenCommand';
 import connectionOpenCommand from './commands/connection/OpenCommand';
+import runCommand from './commands/action/RunCommand';
 import {ActionView} from './views/ActionView';
 import {ConnectionView} from './views/ConnectionView';
 import {SchemaView} from './views/SchemaView';
 import {Repository} from './Repository';
 import {CompletionProvider} from './CompletionProvider';
-import { WebviewPanelRegistry } from './WebviewPanelRegistry';
+import {WebviewPanelRegistry} from './WebviewPanelRegistry';
+import {ConfigCodeLensProvider} from './commands/action/ConfigCodeLensProvider';
+import {ConfigFileSystemProvider} from './commands/action/ConfigFileSystemProvider';
 
 export function activate(context: vscode.ExtensionContext) {
 	let client = new ClientFactory(context, vscode.workspace.getConfiguration());
@@ -29,8 +32,8 @@ export function activate(context: vscode.ExtensionContext) {
 	let connectionView = new ConnectionView(context, client, connectionRepository);
 	let connectionPanelRegistry = new WebviewPanelRegistry();
 	let schemaPanelRegistry = new WebviewPanelRegistry();
-
 	let channel = vscode.window.createOutputChannel('Fusio Response');
+	let actionConfigCodeLens = new ConfigCodeLensProvider();
 
 	vscode.window.registerTreeDataProvider('actionView', actionView);
 	vscode.window.registerTreeDataProvider('schemaView', schemaView);
@@ -70,14 +73,29 @@ export function activate(context: vscode.ExtensionContext) {
 		saveCommand(context, client, registry, actionView, vscode.window.activeTextEditor.document);
 	}));
 
-	context.subscriptions.push(vscode.commands.registerCommand('fusio.action.execute', () => {
+	context.subscriptions.push(vscode.commands.registerCommand('fusio.action.run', () => {
 		if (!vscode.window.activeTextEditor) {
 			return;
 		}
 
-		executeCommand(context, client, registry, channel, vscode.window.activeTextEditor.document);
+		runCommand(registry, vscode.window.activeTextEditor.document);
 	}));
-	
+
+	context.subscriptions.push(vscode.commands.registerCommand('fusio.action.execute', async (configDocument: vscode.TextDocument) => {
+		if (!configDocument) {
+			if (!vscode.window.activeTextEditor) {
+				return;
+			}
+
+			configDocument = vscode.window.activeTextEditor.document;
+		}
+
+		executeCommand(client, channel, configDocument);
+	}));
+
+	context.subscriptions.push(vscode.languages.registerCodeLensProvider({scheme: 'fusio-config', language: 'json'}, actionConfigCodeLens));
+	context.subscriptions.push(vscode.workspace.registerFileSystemProvider('fusio-config', new ConfigFileSystemProvider(context.workspaceState)));
+
 	context.subscriptions.push(vscode.commands.registerCommand('fusio.schema.open', (schema: BackendSchema) => {
 		schemaOpenCommand(context, client, schema, schemaPanelRegistry);
 	}));

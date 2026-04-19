@@ -12,6 +12,11 @@ async function saveCommand(context: vscode.ExtensionContext, clientFactory: Clie
         return;
     }
 
+    if (document.uri.query.indexOf('id=') !== -1) {
+        // skip config json docs
+        return;
+    }
+
     let action = registry.get(document.uri);
     if (action) {
         await update(clientFactory, document, action);
