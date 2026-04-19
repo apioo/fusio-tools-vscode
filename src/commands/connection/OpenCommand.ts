@@ -55,7 +55,7 @@ async function openCommand(context: vscode.ExtensionContext, clientFactory: Clie
         const data = await vscode.workspace.fs.readFile(vscode.Uri.file(templateFile));
         const details = await getConnectionDetails(clientFactory, connection);
 
-        var html = new TextDecoder().decode(data);
+        let html = new TextDecoder().decode(data);
         html = html
             .replace('{{ name }}', '' + connection.name)
             .replace('{{ class }}', '' + connection.class)

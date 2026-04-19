@@ -33,7 +33,7 @@ async function openCommand(context: vscode.ExtensionContext, clientFactory: Clie
 
         const file = path.join(__filename, '..', '..', 'media', 'schema.html');
         vscode.workspace.fs.readFile(vscode.Uri.file(file)).then((data) => {
-            var html = new TextDecoder().decode(data);
+            let html = new TextDecoder().decode(data);
             html = html.replace('{{ html }}', '' + response.preview);
             panel.webview.html = html;    
         });
